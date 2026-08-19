@@ -6,7 +6,10 @@
  * renders HERE with live parameters from the concession solve, and the
  * session-aware occupants render in fixed column positions; strict entries
  * gate themselves on current-session availability while session-maybe
- * entries retain identity. Pure component: everything arrives
+ * entries retain identity. The center and details tracks render as rounded
+ * floating cards over the base background (8px gutter, AppFrame.module.css);
+ * the sidebar stays an edge-to-edge tinted rail because its occupant lays out
+ * at the exact track width. Pure component: everything arrives
  * through the three framework shares — zero cordis or framework imports,
  * zero self-made hooks.
  */
@@ -23,14 +26,19 @@ export type AppFrameProps =
   & PropsRenderSlots<'sidebar' | 'conversation' | 'details' | 'shell.overlay'>
   & PropsStore<ReturnType<typeof createLayoutStore>>
 
+/** Frame-edge gutter between the three column cards, in px. Mirrors the
+ * `margin: var(--dsw-space-2)` on the cards in AppFrame.module.css; the drag
+ * handles center on the card edges, not the grid tracks. */
+const GUTTER = 8
+
 /** Center column grid item (session-body building block). */
 function CenterColumn(props: { children?: ReactNode }) {
-  return <div className={css.centerCol}>{props.children}</div>
+  return <div className={css.centerCard}><div className={css.centerCol}>{props.children}</div></div>
 }
 
 /** Details column grid item; width 0 keeps the subtree mounted (never unmount on close). */
 function DetailsColumn(props: { children?: ReactNode }) {
-  return <div className={css.detailsCol}>{props.children}</div>
+  return <div className={css.detailsCard}><div className={css.detailsCol}>{props.children}</div></div>
 }
 
 /**
@@ -170,16 +178,18 @@ export function AppFrame({
       data-details-collapsed={cols.details === 0 || undefined}
       data-dragging={dragging || undefined}
     >
-      <div className={css.sidebarCol}>
+      <div className={css.sidebarCard}>
         {/* Render-site slot call with live concession output: a closed
             sidebar keeps the mounted slot at the compact-rail width, and the
             component sees its rendered state as owner params decided here
             (collapsed follows the resolved rail, so a derived auto-collapse
             renders the rail UI too). */}
-        {renderSlot('sidebar', {
-          collapsed: sidebarCollapsed,
-          width: cols.sidebar,
-        })}
+        <div className={css.sidebarCol}>
+          {renderSlot('sidebar', {
+            collapsed: sidebarCollapsed,
+            width: cols.sidebar,
+          })}
+        </div>
       </div>
       <>
         {/* Both column occupants stay at fixed tree positions from first
@@ -194,8 +204,8 @@ export function AppFrame({
         {renderSlot('shell.overlay', {})}
       </div>
       {/* The collapsed rail is fixed-width: no resize handle while closed. */}
-      {!sidebarCollapsed && <DragHandle side="sidebar" left={cols.sidebar} onStart={onSidebarStart} onDrag={onSidebarDrag} onEnd={onDragEnd} />}
-      {cols.details > 0 && <DragHandle side="details" left={viewport - cols.details} onStart={onDetailsStart} onDrag={onDetailsDrag} onEnd={onDragEnd} />}
+      {!sidebarCollapsed && <DragHandle side="sidebar" left={cols.sidebar - GUTTER} onStart={onSidebarStart} onDrag={onSidebarDrag} onEnd={onDragEnd} />}
+      {cols.details > 0 && <DragHandle side="details" left={viewport - cols.details + GUTTER} onStart={onDetailsStart} onDrag={onDetailsDrag} onEnd={onDragEnd} />}
     </div>
   )
 }

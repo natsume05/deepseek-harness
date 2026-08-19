@@ -22,15 +22,55 @@
   }
 }
 
-.sidebarCol {
-  min-width: 0;
+/* Column surfaces: the center and details tracks render rounded floating
+   cards over the base background, separated by the 8px gutter (the
+   --dsw-space-2 margins mirror the GUTTER constant in AppFrame.tsx — the
+   drag handles center on the card edges). The sidebar stays a full-height
+   edge-to-edge tinted rail beside the cards (its occupant lays out at the
+   exact track width), and a closed details column (kept mounted at zero
+   width) paints nothing. */
+.sidebarCard {
+  margin: var(--dsw-space-2) 0;
   overflow: hidden;
   background: var(--dsw-specific-sidebar-fill);
-  border-right: 1px solid var(--dsw-alias-border-l1);
+}
+
+.centerCard,
+.detailsCard {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--dsw-radius-l);
+  border: 1px solid var(--dsw-alias-border-l1);
+  box-shadow: var(--dsw-shadow-card);
+}
+
+.centerCard {
+  margin: var(--dsw-space-2);
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.detailsCard {
+  margin: var(--dsw-space-2);
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.frame[data-details-collapsed] .detailsCard {
+  margin: var(--dsw-space-2) 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.sidebarCol {
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .centerCol {
   min-width: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -38,29 +78,24 @@
 
 .detailsCol {
   min-width: 0;
+  height: 100%;
   overflow: hidden;
-  border-left: 1px solid var(--dsw-alias-border-l2);
 }
 
-/* The details subtree stays mounted at zero width, so its border must not paint
-   a 1px seam. The collapsed sidebar instead retains a bordered compact rail. */
-.frame[data-details-collapsed] .detailsCol {
-  border-left: none;
-}
-
-/* Drag handles are frame children (columns clip overflow): an 8px hit strip
-   centered on the column border via inline left, above column content. Details
-   adds a visible 12x32 pill at vertical center; sidebar keeps only the hit strip. */
+/* Drag handles are frame children (columns clip overflow): a 12px hit strip
+   centered on the card edge via inline left, above column content. Hovering
+   the strip or its column reveals a 3x28 rounded brand bar at vertical
+   center; dragging paints it solid. */
 .handle {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 8px;
-  margin-left: -4px;
+  width: 12px;
+  margin-left: -6px;
   cursor: col-resize;
   z-index: 2;
   touch-action: none;
-  /* Rides the same curve as the tracks so the pill stays on the moving
+  /* Rides the same curve as the tracks so the bar stays on the moving
      border during collapse/expand; paused while dragging (frame rule). */
   transition: left var(--ds-transition-duration-slow) var(--ds-ease-in-out);
 }
@@ -75,19 +110,17 @@
   }
 }
 
-.handle[data-side='details']::after {
+.handle::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 12px;
-  height: 32px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  background: var(--dsw-alias-button-floating-fill);
-  border: 1px solid var(--dsw-alias-border-l2-darkmode-thin);
-  /* Hover affordance: the details pill hides until the pointer is over its
+  width: 3px;
+  height: 28px;
+  border-radius: var(--dsw-radius-full);
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+  /* Hover affordance: the bar hides until the pointer is over its
      column, the strip itself, or a drag. */
   opacity: 0;
   transition:
@@ -95,16 +128,15 @@
     background var(--ds-transition-duration-slow) var(--ds-ease-in-out);
 }
 
-.detailsCol:hover ~ .handle[data-side='details']::after,
-.handle[data-side='details']:hover::after,
-.handle[data-side='details'][data-dragging='true']::after {
+.sidebarCard:hover ~ .handle[data-side='sidebar']::before,
+.detailsCard:hover ~ .handle[data-side='details']::before,
+.handle:hover::before,
+.handle[data-dragging='true']::before {
   opacity: 1;
 }
 
-.handle[data-side='details']:hover::after,
-.handle[data-side='details'][data-dragging='true']::after {
-  background: var(--dsw-alias-button-floating-hover);
-  border-color: var(--dsw-alias-border-l3);
+.handle[data-dragging='true']::before {
+  background: var(--dsw-static-deepseek-400);
 }
 
 .overlayLayer {
