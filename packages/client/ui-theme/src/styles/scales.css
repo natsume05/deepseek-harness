@@ -1,0 +1,57 @@
+/* Design scales: radius, spacing, motion, elevation, z-index, the brand
+   gradient, and glass utilities. Shared by both visual styles (classic and
+   modern); style-specific values — colors, layer backgrounds, border tints —
+   live in design-platform.css under the data-ds-visual-style tracks. */
+body {
+  /* Radius */
+  --dsw-radius-xs: 4px;
+  --dsw-radius-s: 6px;
+  --dsw-radius-m: 8px;
+  --dsw-radius-l: 12px;
+  --dsw-radius-xl: 16px;
+  --dsw-radius-full: 999px;
+
+  /* Spacing (4px base) */
+  --dsw-space-1: 4px;
+  --dsw-space-2: 8px;
+  --dsw-space-3: 12px;
+  --dsw-space-4: 16px;
+  --dsw-space-5: 20px;
+  --dsw-space-6: 24px;
+  --dsw-space-7: 32px;
+  --dsw-space-8: 48px;
+
+  /* Motion */
+  --dsw-motion-duration-fast: 100ms;
+  --dsw-motion-duration: 200ms;
+  --dsw-motion-duration-slow: 300ms;
+  --dsw-motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dsw-motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dsw-motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Elevation (light track) */
+  --dsw-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --dsw-shadow-floating: 0 0 1px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --dsw-shadow-overlay: 0 0 1px rgba(0, 0, 0, 0.16), 0 16px 48px rgba(0, 0, 0, 0.12);
+
+  /* Z-index */
+  --dsw-z-sticky: 100;
+  --dsw-z-dropdown: 1000;
+  --dsw-z-modal: 2000;
+  --dsw-z-toast: 3000;
+
+  /* Brand gradient (DeepSeek blue → violet): brand moments only — wordmarks,
+     hero accents, focus halos. Functional elements use state/alias tokens. */
+  --dsw-gradient-brand: linear-gradient(135deg, #4176e6 0%, #6a5cf5 100%);
+
+  /* Glass surfaces (floating bars, menus, command palettes) */
+  --dsw-glass-bg: rgba(255, 255, 255, 0.72);
+  --dsw-glass-blur: blur(16px) saturate(1.4);
+}
+
+body[data-ds-dark-theme] {
+  --dsw-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.24);
+  --dsw-shadow-floating: 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --dsw-shadow-overlay: 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 48px rgba(0, 0, 0, 0.6);
+  --dsw-glass-bg: rgba(30, 30, 34, 0.7);
+}

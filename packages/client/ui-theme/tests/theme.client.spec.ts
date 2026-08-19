@@ -26,10 +26,31 @@ describe('ThemeRuntime', () => {
     const { theme } = make()
     const snapshot = theme.getTheme()
     expect(snapshot.preference).toBe('system')
+    expect(snapshot.style).toBe('modern')
     // jsdom matchMedia is absent; system resolves to light.
     expect(snapshot.active.id).toBe('light')
     expect(snapshot.active.colorScheme).toBe('light')
     expect(snapshot.themes.map(t => t.id)).toEqual(['light', 'dark'])
+  })
+
+  it('setStyle switches, writes through the scope, republishes, and keeps DOM untouched', () => {
+    const { theme, events, host } = make()
+    theme.setStyle('classic')
+    expect(theme.getTheme().style).toBe('classic')
+    expect(host.set).toHaveBeenCalledWith('style', 'classic')
+    expect(events).toHaveLength(1)
+    expect(events[0]).toBe(theme.getTheme())
+    // The service never touches presentation state.
+    expect(document.body.hasAttribute('data-ds-visual-style')).toBe(false)
+    // Same-value set is a no-op (no extra event).
+    theme.setStyle('classic')
+    expect(events).toHaveLength(1)
+    expect(host.set).toHaveBeenCalledOnce()
+  })
+
+  it('throws on unknown setStyle ids', () => {
+    const { theme } = make()
+    expect(() => { theme.setStyle('retro') }).toThrow('not registered')
   })
 
   it('setTheme switches, writes through the scope, republishes, and keeps DOM untouched', () => {
@@ -50,17 +71,27 @@ describe('ThemeRuntime', () => {
 
   it('adopts a published Host section without writing it back', () => {
     const { theme, events, host } = make()
-    host.publish({ status: 'ready', value: { preference: 'dark' }, revision: 1, writable: true })
+    host.publish({ status: 'ready', value: { preference: 'dark', style: 'modern' }, revision: 1, writable: true })
     expect(theme.getTheme().preference).toBe('dark')
     expect(events).toHaveLength(1)
     expect(host.set).not.toHaveBeenCalled()
-    host.publish({ value: { preference: 'dark' }, revision: 2 })
+    host.publish({ value: { preference: 'dark', style: 'modern' }, revision: 2 })
+    expect(events).toHaveLength(1)
+  })
+
+  it('adopts a published visual style without writing it back', () => {
+    const { theme, events, host } = make()
+    host.publish({ status: 'ready', value: { preference: 'system', style: 'classic' }, revision: 1, writable: true })
+    expect(theme.getTheme().style).toBe('classic')
+    expect(events).toHaveLength(1)
+    expect(host.set).not.toHaveBeenCalled()
+    host.publish({ value: { preference: 'system', style: 'classic' }, revision: 2 })
     expect(events).toHaveLength(1)
   })
 
   it('adopts a section already standing at construction', () => {
     const host = stubSettingsScope<ThemeSettings>()
-    host.publish({ status: 'ready', value: { preference: 'dark' }, revision: 1, writable: true })
+    host.publish({ status: 'ready', value: { preference: 'dark', style: 'modern' }, revision: 1, writable: true })
     const { theme } = make(host)
     expect(theme.getTheme().preference).toBe('dark')
   })

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-/** AppearanceRow behavior: three cubes, selection follows the persisted
- * preference, clicks drive setTheme. */
+/** AppearanceRow behavior: preference cubes + visual-style options, selection
+ * follows the persisted values, clicks drive setTheme/setStyle. */
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { createSnapshotStore, type SessionListState, type WorkspaceListState } from '@deepseek-ai/dsh-client-runtime/client'
@@ -8,7 +8,7 @@ import { bindSnapshotSelector } from '@deepseek-ai/dsh-client-web-react'
 import { AppearanceRow } from '../src/client/AppearanceRow.tsx'
 import type { AppearanceRowComponentProps } from '../src/client/AppearanceRow.tsx'
 import { createAppearanceRowStore } from '../src/client/settings-store.ts'
-import type { ThemePreference } from '../src/client/index.ts'
+import type { ThemePreference, VisualStyle } from '../src/client/index.ts'
 
 afterEach(cleanup)
 
@@ -17,6 +17,9 @@ const COPY: Record<string, string> = {
   'appearance.light': 'Light',
   'appearance.dark': 'Dark',
   'appearance.system': 'System',
+  'appearance.style.title': 'Visual style',
+  'appearance.style.classic': 'Classic',
+  'appearance.style.modern': 'Modern',
 }
 
 /** Empty global standard-kit hooks (the row reads neither). */
@@ -33,11 +36,12 @@ function emptyWorkspaces() {
   return bindSnapshotSelector(store)
 }
 
-function mount(preference: ThemePreference = 'system') {
+function mount(preference: ThemePreference = 'system', style: VisualStyle = 'modern') {
   // Real store instance — the sanctioned zero-machinery path for tests.
   const store = createAppearanceRowStore().create()
-  store.actions.sync(preference, 0)
+  store.actions.sync(preference, style, 0)
   const setTheme = vi.fn()
+  const setStyle = vi.fn()
   const props: AppearanceRowComponentProps = {
     useSessions: emptySessions(),
     useWorkspaces: emptyWorkspaces(),
@@ -45,21 +49,25 @@ function mount(preference: ThemePreference = 'system') {
     actions: store.actions,
     t: (key: string) => COPY[key] ?? key,
     setTheme,
+    setStyle,
   }
   render(<AppearanceRow {...props} />)
-  return { store, setTheme }
+  return { store, setTheme, setStyle }
 }
 
 const pressed = (name: RegExp): string | null =>
   screen.getByRole('button', { name }).getAttribute('aria-pressed')
 
 describe('AppearanceRow', () => {
-  it('renders the title and three cubes with the preference cube selected', () => {
-    mount('dark')
+  it('renders both rows with the persisted preference and style cubes selected', () => {
+    mount('dark', 'classic')
     expect(screen.getByText('Appearance')).toBeDefined()
     expect(pressed(/Dark/)).toBe('true')
     expect(pressed(/Light/)).toBe('false')
     expect(pressed(/System/)).toBe('false')
+    expect(screen.getByText('Visual style')).toBeDefined()
+    expect(pressed(/Classic/)).toBe('true')
+    expect(pressed(/Modern/)).toBe('false')
   })
 
   it('click drives setTheme; selection follows the store mirror, not the click echo', () => {
@@ -68,8 +76,18 @@ describe('AppearanceRow', () => {
     expect(b.setTheme).toHaveBeenCalledWith('light')
     // No store write yet: selection is unchanged.
     expect(pressed(/Dark/)).toBe('true')
-    act(() => { b.store.actions.sync('light', 1) })
+    act(() => { b.store.actions.sync('light', 'modern', 1) })
     expect(pressed(/Light/)).toBe('true')
     expect(pressed(/Dark/)).toBe('false')
+  })
+
+  it('click drives setStyle; selection follows the store mirror', () => {
+    const b = mount('system', 'modern')
+    fireEvent.click(screen.getByRole('button', { name: /Classic/ }))
+    expect(b.setStyle).toHaveBeenCalledWith('classic')
+    expect(pressed(/Modern/)).toBe('true')
+    act(() => { b.store.actions.sync('system', 'classic', 1) })
+    expect(pressed(/Classic/)).toBe('true')
+    expect(pressed(/Modern/)).toBe('false')
   })
 })

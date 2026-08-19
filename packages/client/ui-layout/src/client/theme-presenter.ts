@@ -1,7 +1,8 @@
 /**
  * Global theme DOM applier: projects the resolved ThemeSnapshot onto the
  * document — `html { color-scheme }` for native UA chrome (scrollbars, form
- * controls), `body[data-ds-dark-theme]` for the token palette, the active
+ * controls), `body[data-ds-dark-theme]` for the token palette,
+ * `body[data-ds-visual-style]` for the visual-style token track, the active
  * theme's alias-token overrides as inline CSS variables on body, and one
  * presenter-owned `meta[name="theme-color"]` for surrounding browser UI. Pure
  * DOM writes, no React involvement; the presenter only ever retracts what it
@@ -11,6 +12,9 @@ import type { ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client'
 
 /** Body attribute selecting the dark base palette in the token stylesheets. */
 export const DARK_ATTRIBUTE = 'data-ds-dark-theme'
+
+/** Body attribute selecting the visual-style token track (classic snapshot or modern). */
+export const VISUAL_STYLE_ATTRIBUTE = 'data-ds-visual-style'
 
 /** Applies theme snapshots to the document; one instance per plugin fiber. */
 export class ThemePresenter {
@@ -28,10 +32,10 @@ export class ThemePresenter {
   /**
    * Project a snapshot onto the document: set root `color-scheme` and the body
    * palette attribute from `active.colorScheme` (never the id — `system` is
-   * resolved upstream), then replace the previously applied token variables
-   * with `active.tokens`. Browser theme-color metadata follows the computed
-   * body background after those writes, so the rendered palette remains the
-   * color authority.
+   * resolved upstream), set the visual-style attribute from `snapshot.style`,
+   * then replace the previously applied token variables with `active.tokens`.
+   * Browser theme-color metadata follows the computed body background after
+   * those writes, so the rendered palette remains the color authority.
    * @param snapshot - resolved theme snapshot from ctx.theme.
    */
   apply(snapshot: ThemeSnapshot): void {
@@ -40,6 +44,10 @@ export class ThemePresenter {
     const body = document.body
     if (scheme === 'dark') body.setAttribute(DARK_ATTRIBUTE, '')
     else body.removeAttribute(DARK_ATTRIBUTE)
+    // `modern` is the default track: only the classic rollback snapshot needs
+    // an explicit attribute.
+    if (snapshot.style === 'classic') body.setAttribute(VISUAL_STYLE_ATTRIBUTE, 'classic')
+    else body.removeAttribute(VISUAL_STYLE_ATTRIBUTE)
     for (const name of this.appliedTokens) body.style.removeProperty(name)
     this.appliedTokens = []
     for (const [name, value] of Object.entries(snapshot.active.tokens)) {
@@ -50,11 +58,12 @@ export class ThemePresenter {
     if (!this.themeColorMeta.isConnected) document.head.append(this.themeColorMeta)
   }
 
-  /** Retract root color-scheme, the palette attribute, token variables, and the owned metadata node. */
+  /** Retract root color-scheme, both body attributes, token variables, and the owned metadata node. */
   dispose(): void {
     document.documentElement.style.removeProperty('color-scheme')
     const body = document.body
     body.removeAttribute(DARK_ATTRIBUTE)
+    body.removeAttribute(VISUAL_STYLE_ATTRIBUTE)
     for (const name of this.appliedTokens) body.style.removeProperty(name)
     this.appliedTokens = []
     this.themeColorMeta.remove()

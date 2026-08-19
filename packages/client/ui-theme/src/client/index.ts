@@ -20,14 +20,15 @@ import { AppearanceRow } from './AppearanceRow.tsx'
 import { createAppearanceRowStore } from './settings-store.ts'
 import { en, zh, type ThemeKey } from './locales.ts'
 import {
-  DEFAULT_PREFERENCE, isThemePreference, THEME_PREFERENCE_FIELD, THEME_SETTINGS_NAMESPACE,
-  type ThemePreference, type ThemeSettings,
+  DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, isThemePreference, isVisualStyle,
+  THEME_PREFERENCE_FIELD, THEME_SETTINGS_NAMESPACE, VISUAL_STYLE_FIELD,
+  type ThemePreference, type ThemeSettings, type VisualStyle,
 } from '../theme-settings.ts'
 
 export type { AppearanceRowComponentProps, AppearanceRowInjected } from './AppearanceRow.tsx'
 export type { AppearanceRowState } from './settings-store.ts'
 export type { ThemeKey } from './locales.ts'
-export type { ThemePreference, ThemeSettings } from '../theme-settings.ts'
+export type { ThemePreference, ThemeSettings, VisualStyle } from '../theme-settings.ts'
 
 /** Namespace owning this feature's settings-row copy. */
 export const SETTINGS_NS = 'settings.theme'
@@ -74,6 +75,8 @@ export interface ThemeDefinition {
 export interface ThemeSnapshot {
   /** The persisted preference (may be `system`). */
   preference: ThemePreference
+  /** The persisted visual style (classic snapshot or the modern design). */
+  style: VisualStyle
   /**
    * The resolved active theme (`system` resolved via prefers-color-scheme)
    * with override layers folded into its tokens (seq order, later layers win
@@ -152,6 +155,7 @@ export class ThemeRuntime {
   private readonly host: SettingsScope<ThemeSettings>
   private themes: ThemeDefinition[] = [...BUILTIN_THEMES]
   private preference: ThemePreference
+  private style: VisualStyle
   private revision = 0
   private snapshot: ThemeSnapshot
   private readonly media: MediaQueryList | undefined
@@ -168,6 +172,7 @@ export class ThemeRuntime {
     this.ctx = ctx
     this.host = host
     this.preference = DEFAULT_PREFERENCE
+    this.style = DEFAULT_VISUAL_STYLE
     // Non-browser runs (node e2e booting the client tree) have no matchMedia.
     this.media = typeof matchMedia === 'undefined' ? undefined : matchMedia('(prefers-color-scheme: dark)')
     this.snapshot = this.buildSnapshot()
@@ -229,11 +234,28 @@ export class ThemeRuntime {
     this.publish()
   }
 
-  /** Adopt the scope's accepted durable preference without writing it back. */
+  /**
+   * Switch the visual style — the second user preference write entry, orthogonal
+   * to the color-scheme preference. Every accepted value emits `theme/change`.
+   * @param id - `classic` (pre-redesign snapshot) or `modern`; anything else throws.
+   */
+  setStyle(id: string): void {
+    if (!isVisualStyle(id)) throw new Error(`visual style "${id}" is not registered`)
+    if (this.style === id) return
+    this.style = id
+    void this.host.set(VISUAL_STYLE_FIELD, id)
+    this.publish()
+  }
+
+  /** Adopt the scope's accepted durable preference and style without writing them back. */
   private adopt(): void {
     const section = this.host.getSnapshot().value
-    if (section === undefined || this.preference === section.preference) return
-    this.preference = section.preference
+    if (section === undefined) return
+    const preferenceChanged = this.preference !== section.preference
+    const styleChanged = this.style !== section.style
+    if (!preferenceChanged && !styleChanged) return
+    if (preferenceChanged) this.preference = section.preference
+    if (styleChanged) this.style = section.style
     this.publish()
   }
 
@@ -300,6 +322,7 @@ export class ThemeRuntime {
     if (active === undefined) throw new Error(`theme registry lost "${resolvedId}"`)
     return Object.freeze({
       preference: this.preference,
+      style: this.style,
       active: this.composeActive(active),
       themes: Object.freeze([...this.themes]),
       revision: this.revision,
@@ -391,7 +414,7 @@ export function apply(ctx: ClientContext): void {
   const store = createAppearanceRowStore()
   let bound: BoundActions<typeof store> | undefined
   const sync = (snapshot: ThemeSnapshot): void => {
-    bound?.sync(snapshot.preference, snapshot.revision)
+    bound?.sync(snapshot.preference, snapshot.style, snapshot.revision)
   }
   ctx.on('theme/change', sync)
   const injected = (actions: BoundActions<typeof store>): AppearanceRowInjected => {
@@ -401,6 +424,7 @@ export function apply(ctx: ClientContext): void {
     sync(theme.getTheme())
     return {
       setTheme: (id) => { theme.setTheme(id) },
+      setStyle: (id) => { theme.setStyle(id) },
     }
   }
   ctx.slots.inject('settings.general.item', () => ctx.slots.register({

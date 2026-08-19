@@ -5,18 +5,20 @@
  * ThemePresenter owns after the client plugin tree activates.
  */
 
-import { DEFAULT_PREFERENCE, type ThemePreference } from './theme-settings.ts'
+import { DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, type ThemePreference, type VisualStyle } from './theme-settings.ts'
 
-/** Build the inline script for one schema-validated built-in preference. */
-function bootThemeScript(preference: ThemePreference): string {
+/** Build the inline script for one schema-validated built-in preference and visual style. */
+function bootThemeScript(preference: ThemePreference, style: VisualStyle): string {
   return `<script>(() => {
   const preference = ${JSON.stringify(preference)}
+  const style = ${JSON.stringify(style)}
   const systemDark = preference === 'system'
     && typeof matchMedia !== 'undefined'
     && matchMedia('(prefers-color-scheme: dark)').matches
   const dark = preference === 'dark' || systemDark
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
   document.body.toggleAttribute('data-ds-dark-theme', dark)
+  document.body.setAttribute('data-ds-visual-style', style)
 })()</script>`
 }
 
@@ -26,13 +28,15 @@ function bootThemeScript(preference: ThemePreference): string {
  * end, where the HTML parser has already synthesized a body.
  * @param html - Raw application index HTML.
  * @param preference - Current Host-backed built-in preference.
+ * @param style - Current Host-backed visual style.
  * @returns HTML containing the theme bootstrap.
  */
 export function injectBootTheme(
   html: string,
   preference: ThemePreference = DEFAULT_PREFERENCE,
+  style: VisualStyle = DEFAULT_VISUAL_STYLE,
 ): string {
-  const script = bootThemeScript(preference)
+  const script = bootThemeScript(preference, style)
   const body = /<body(?:\s[^>]*)?>/i.exec(html)
   if (body === null) return `${html}${script}`
   const at = body.index + body[0].length

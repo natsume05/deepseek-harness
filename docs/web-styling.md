@@ -6,7 +6,7 @@ This reference defines styling ownership and component rules for browser client 
 
 ## Ownership
 
-[`ui-theme`](../packages/client/ui-theme/README.md) owns the `--dsw-*` static scale, semantic aliases, typography, motion, gradients, shadows, scrollbar styles, and light/dark preference. [`ui-layout`](../packages/client/ui-layout/README.md) applies the resolved theme snapshot to the document. Feature packages consume semantic aliases and do not define another global theme.
+[`ui-theme`](../packages/client/ui-theme/README.md) owns the `--dsw-*` static scale, semantic aliases, typography, motion, gradients, shadows, scrollbar styles, light/dark preference, and the classic/modern visual-style tracks: `scales.css` carries the radius/spacing/motion/elevation/z-index/brand-gradient/glass tokens shared by both styles, and `design-platform.css` carries both color tracks (`body[data-ds-visual-style="classic"]` freezes the pre-redesign values). [`ui-layout`](../packages/client/ui-layout/README.md) applies the resolved theme snapshot to the document, including `body[data-ds-visual-style]`. Feature packages consume semantic aliases and do not define another global theme.
 
 Global style sheets belong in `ui-theme/src/styles/`. Component styles live beside their component as CSS Modules. A component may define a local custom property when its value is part of that component's layout or presentation contract; shared colors, typography, elevation, and motion belong to the theme package.
 

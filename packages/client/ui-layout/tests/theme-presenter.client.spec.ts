@@ -1,20 +1,21 @@
 // @vitest-environment jsdom
 // ThemePresenter behavior account: root color-scheme and the palette attribute
-// follow active.colorScheme only, token variables replace the previous apply's
-// set, theme-color metadata follows the rendered body background, and dispose
+// follow active.colorScheme only, the visual-style attribute follows
+// snapshot.style, token variables replace the previous apply's set,
+// theme-color metadata follows the rendered body background, and dispose
 // retracts everything the presenter wrote.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client'
-import { DARK_ATTRIBUTE, ThemePresenter } from '@deepseek-ai/dsh-client-ui-layout/src/client/theme-presenter.ts'
+import { DARK_ATTRIBUTE, ThemePresenter, VISUAL_STYLE_ATTRIBUTE } from '@deepseek-ai/dsh-client-ui-layout/src/client/theme-presenter.ts'
 
 const LIGHT_THEME_COLOR = 'rgb(255, 255, 255)'
 const DARK_THEME_COLOR = 'rgb(21, 21, 23)'
 
-function snapshot(colorScheme: 'light' | 'dark', tokens: Record<string, string> = {}): ThemeSnapshot {
+function snapshot(colorScheme: 'light' | 'dark', tokens: Record<string, string> = {}, style: 'classic' | 'modern' = 'modern'): ThemeSnapshot {
   // The presenter must key off colorScheme, not the id — keep them distinct.
   const active = { id: `${colorScheme}-test`, colorScheme, tokens }
-  return { preference: colorScheme, active, themes: [active], revision: 1 }
+  return { preference: colorScheme, style, active, themes: [active], revision: 1 }
 }
 
 function clearThemePresentation(): void {
@@ -29,6 +30,7 @@ beforeEach(() => {
   clearThemePresentation()
   document.documentElement.style.removeProperty('color-scheme')
   document.body.removeAttribute(DARK_ATTRIBUTE)
+  document.body.removeAttribute(VISUAL_STYLE_ATTRIBUTE)
   document.body.removeAttribute('style')
   const style = document.createElement('style')
   style.dataset.themePresenterTest = ''
@@ -65,6 +67,17 @@ describe('ThemePresenter', () => {
     expect(document.head.querySelectorAll('meta[name="theme-color"]')).toHaveLength(1)
   })
 
+  it('classic style writes the visual-style attribute; modern clears it', () => {
+    const presenter = new ThemePresenter()
+    presenter.apply(snapshot('light', {}, 'classic'))
+    expect(document.body.getAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe('classic')
+    presenter.apply(snapshot('light'))
+    expect(document.body.hasAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe(false)
+    presenter.apply(snapshot('dark', {}, 'classic'))
+    expect(document.body.getAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe('classic')
+    expect(document.body.hasAttribute(DARK_ATTRIBUTE)).toBe(true)
+  })
+
   it('applies tokens as inline variables and clears the previous set on theme change', () => {
     const presenter = new ThemePresenter()
     presenter.apply(snapshot('dark', { '--dsw-alias-bg': '#111', '--dsw-alias-fg': '#eee' }))
@@ -76,14 +89,15 @@ describe('ThemePresenter', () => {
     expect(document.body.style.getPropertyValue('--dsw-alias-fg')).toBe('')
   })
 
-  it('dispose removes color-scheme, the attribute, and every applied variable, sparing foreign inline styles', () => {
+  it('dispose removes color-scheme, both attributes, and every applied variable, sparing foreign inline styles', () => {
     document.body.style.setProperty('--foreign', 'kept')
     const presenter = new ThemePresenter()
-    presenter.apply(snapshot('dark', { '--dsw-alias-bg': '#111' }))
+    presenter.apply(snapshot('dark', { '--dsw-alias-bg': '#111' }, 'classic'))
     const meta = themeColorMeta()
     presenter.dispose()
     expect(document.documentElement.style.colorScheme).toBe('')
     expect(document.body.hasAttribute(DARK_ATTRIBUTE)).toBe(false)
+    expect(document.body.hasAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe(false)
     expect(document.body.style.getPropertyValue('--dsw-alias-bg')).toBe('')
     expect(document.body.style.getPropertyValue('--foreign')).toBe('kept')
     expect(meta?.isConnected).toBe(false)

@@ -80,10 +80,13 @@ describe('ui-layout client apply', () => {
     theme.setTheme('dark')
     expect(document.documentElement.style.colorScheme).toBe('dark')
     expect(document.body.hasAttribute('data-ds-dark-theme')).toBe(true)
+    theme.setStyle('classic')
+    expect(document.body.getAttribute('data-ds-visual-style')).toBe('classic')
     expect(document.head.querySelector('meta[name="theme-color"]')).toBe(themeColorMeta)
     await fiber.dispose()
     expect(document.documentElement.style.colorScheme).toBe('')
     expect(document.body.hasAttribute('data-ds-dark-theme')).toBe(false)
+    expect(document.body.hasAttribute('data-ds-visual-style')).toBe(false)
     expect(themeColorMeta?.isConnected).toBe(false)
     // Listener is off: further theme changes no longer reach the document.
     theme.setTheme('light')
