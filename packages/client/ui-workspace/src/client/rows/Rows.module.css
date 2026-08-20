@@ -15,13 +15,33 @@
   color: var(--dsw-alias-label-primary);
 }
 
+.sessionRow,
+.searchResultRow {
+  position: relative;
+}
+
 .projectRow:hover,
 .sessionRow:hover {
   background: var(--dsw-alias-interactive-bg-hover);
 }
 
+/* Selected session and search rows use the sidebar's active-item language: a
+   solid tint plus a brand accent bar at the leading edge. */
 .sessionRow.selected {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: var(--dsw-specific-sidebar-nav-item-active);
+}
+
+.sessionRow.selected::before,
+.searchResultRow.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  border-radius: var(--dsw-radius-full);
+  background: var(--dsw-alias-state-business-primary);
 }
 
 .searchResultRow {
@@ -45,7 +65,7 @@
 }
 
 .searchResultRow.selected {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: var(--dsw-specific-sidebar-nav-item-active);
 }
 
 .searchResultHeading {

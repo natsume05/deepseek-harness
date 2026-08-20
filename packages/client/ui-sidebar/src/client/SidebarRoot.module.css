@@ -170,7 +170,8 @@
 }
 
 /* New Session: 38px bar, 12px radius (figma 133:7634 geometry, squared-off
-   corners); collapsed it renders as the rail's plain icon control. */
+   corners); the primary action rides the brand-blue info fill with a white
+   label. Collapsed it renders as the rail's plain icon control. */
 .newSession {
   flex: none;
   display: flex;
@@ -181,19 +182,20 @@
   padding: 8px 16px;
   margin: 0 2px 8px;
   box-sizing: border-box;
-  border: 1px solid var(--dsw-alias-border-l2);
+  border: none;
   border-radius: 12px;
-  background: var(--dsw-alias-button-elevated-fill);
-  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-button-info-fill);
+  color: #fff;
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   cursor: pointer;
   overflow: hidden;
+  transition: background-color 100ms ease;
 }
 
 .newSession:hover {
-  background: var(--dsw-alias-button-floating-hover);
+  background: var(--dsw-alias-button-info-hover);
 }
 
 .collapsed .newSession {
