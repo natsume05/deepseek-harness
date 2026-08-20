@@ -54,4 +54,7 @@ body[data-ds-dark-theme] {
   --dsw-shadow-floating: 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.5);
   --dsw-shadow-overlay: 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 48px rgba(0, 0, 0, 0.6);
   --dsw-glass-bg: rgba(30, 30, 34, 0.7);
+  /* Brighter brand gradient on the dark track so clipped-gradient marks and
+     halos keep their contrast. */
+  --dsw-gradient-brand: linear-gradient(135deg, #6a9bff 0%, #8f7bff 100%);
 }

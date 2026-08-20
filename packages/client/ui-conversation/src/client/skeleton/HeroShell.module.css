@@ -41,6 +41,12 @@
 .headlineText {
   grid-row: 1;
   grid-column: 2;
+  /* Brand-moment gradient on the hero slogan: the text clips the shared
+     brand gradient so the mark reads as the product's own accent. */
+  background-image: var(--dsw-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .previewBadge {

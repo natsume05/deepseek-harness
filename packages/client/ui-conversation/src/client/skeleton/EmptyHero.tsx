@@ -92,7 +92,10 @@ export function HeroGlow({ className }: { className?: string | undefined }) {
         </filter>
       </defs>
       <g filter={`url(#${glowFilterId})`}>
-        <ellipse cx="525.5" cy="234" rx="425.5" ry="134" fill="#6187D8" fillOpacity="0.08" />
+        {/* Brand-gradient halo (blue → violet) with a second violet bloom
+            toward the top-right; the gradient rides the shared brand token. */}
+        <ellipse cx="525.5" cy="234" rx="425.5" ry="134" fillOpacity="0.14" style={{ fill: 'var(--dsw-gradient-brand)' }} />
+        <ellipse cx="710" cy="140" rx="190" ry="85" fillOpacity="0.08" style={{ fill: 'var(--dsw-gradient-brand)' }} />
       </g>
     </svg>
   )

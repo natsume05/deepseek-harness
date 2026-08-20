@@ -6,11 +6,13 @@
 }
 
 /* Solid states: same-color halo via a 0.10-opacity outer layer (::before)
- * with a 6/10-scale solid core. Layer color rides currentColor set per state. */
+ * with a 6/10-scale solid core. Layer color rides currentColor set per state;
+ * switching states eases the color instead of snapping. */
 .dot {
   position: relative;
   display: inline-block;
   flex: none;
+  transition: color var(--dsw-motion-duration) var(--dsw-motion-ease-out);
 }
 
 .dot::before {
@@ -28,6 +30,17 @@
   inset: 20%;
   border-radius: 50%;
   background: currentColor;
+}
+
+/* The settled state lands with a small settle pop. */
+.dot[data-state='done']::after {
+  animation: dsh-state-dot-settle var(--dsw-motion-duration-slow) var(--dsw-motion-ease-out);
+}
+
+@keyframes dsh-state-dot-settle {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 .dot[data-state='done'] {
@@ -62,4 +75,19 @@
   12.5%, 24.9% { opacity: 0.6; }
   25%, 37.4% { opacity: 0.35; }
   37.5%, 100% { opacity: 0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition: none;
+  }
+
+  .dot[data-state='done']::after {
+    animation: none;
+  }
+
+  .cell {
+    animation: none;
+    opacity: 0.6;
+  }
 }
