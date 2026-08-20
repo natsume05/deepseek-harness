@@ -31,8 +31,10 @@
   overflow: hidden;
   border: 1px solid var(--dsw-alias-border-inverted);
   border-radius: 24px;
-  /* Glass dialog (the classic snapshot resolves to the solid layer-2 fill). */
-  background: var(--dsw-glass-floating-bg);
+  /* Glass dialog. The var fallback keeps a solid fill on browsers without
+     color-mix(); the classic snapshot resolves the glass token itself to the
+     solid layer-2 fill. */
+  background: var(--dsw-glass-floating-bg, var(--dsw-alias-bg-layer-2));
   backdrop-filter: var(--dsw-glass-blur);
   box-shadow: var(--dsw-shadow-lv3);
   /* The card mounts with the modal; a fade-and-scale marks the entry. */

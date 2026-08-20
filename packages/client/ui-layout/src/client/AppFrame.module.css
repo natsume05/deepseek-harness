@@ -42,7 +42,10 @@
 .sidebarCard {
   margin: var(--dsw-space-2) 0;
   overflow: hidden;
-  background: var(--dsw-glass-sidebar-bg);
+  /* Glass rail: tinted over the nebula behind it. The var fallback keeps a
+     solid fill on browsers without color-mix(); the classic snapshot
+     resolves the glass token itself to the solid fill. */
+  background: var(--dsw-glass-sidebar-bg, var(--dsw-specific-sidebar-fill));
   backdrop-filter: var(--dsw-glass-blur);
 }
 
