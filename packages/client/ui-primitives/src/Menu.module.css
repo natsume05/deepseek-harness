@@ -17,6 +17,8 @@
   border-radius: 12px;
   background: var(--dsw-specific-menu);
   box-shadow: var(--dsw-shadow-lv3);
+  /* The card mounts when the menu opens; a shared fade-and-settle marks it. */
+  animation: dsh-menu-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);
   /* Elevated surface: the scrollbar thumb takes the l2 elevation tokens. The
      declaration sits on the card rather than on `.scrollable .viewport`
      because the elevation is a property of this surface, and the custom
@@ -24,6 +26,18 @@
      ui-theme styles/scrollbar.css for the rebinding contract). */
   --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
   --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
+}
+
+@keyframes dsh-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list,
+  .submenu {
+    animation: none;
+  }
 }
 
 /* Primary card is 218 wide in the design across both hosts. */
@@ -113,6 +127,11 @@
 
 .item:hover:not(:disabled) {
   background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: -2px;
 }
 
 .denseList .item {

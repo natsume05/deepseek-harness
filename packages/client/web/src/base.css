@@ -37,3 +37,16 @@ select,
 textarea {
   font-family: inherit;
 }
+
+/* Reduced-motion backstop: component sheets already gate their own motion;
+   this collapses anything missed to near-instant so no animation conveys
+   information a reduced-motion user cannot read. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
