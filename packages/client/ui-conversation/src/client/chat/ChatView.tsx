@@ -383,6 +383,7 @@ export function ChatView({
             <ChatNodeSeat
               key={nodeKey}
               nodeKey={nodeKey}
+              entering={nodeKey === lastKey}
               useSession={useSession}
               selectedCallId={selectedCallId}
               cwd={cwd}

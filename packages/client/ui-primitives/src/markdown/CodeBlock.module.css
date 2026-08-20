@@ -11,6 +11,7 @@
   margin: 16px 0;
   color: var(--dsw-alias-label-primary);
   background: var(--dsw-alias-markdown-code-block);
+  border: 1px solid var(--dsw-alias-border-l1);
   border-radius: var(--dsl-code-block-border-radius);
 }
 

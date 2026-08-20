@@ -32,7 +32,11 @@ afterEach(cleanup)
 function serialize(node: Node, indent: string, inPre: boolean): string {
   if (node.nodeType !== Node.ELEMENT_NODE) return ''
   const element = node as Element
+  // data-streaming is streaming-chrome metadata (the caret CSS gate), not
+  // markdown semantics: the parity contract compares document structure, so
+  // it is dropped here instead of pinning a streaming-only attribute.
   const attrs = [...element.attributes]
+    .filter(attr => attr.name !== 'data-streaming')
     .map(attr => `${attr.name}=${JSON.stringify(attr.value)}`)
     .sort()
     .join(' ')

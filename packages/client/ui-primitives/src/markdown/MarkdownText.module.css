@@ -132,9 +132,37 @@
 }
 
 .markdown blockquote {
-  border-left: 2px solid var(--dsw-alias-label-caption);
+  border-left: 3px solid var(--dsw-alias-state-business-primary);
+  background: var(--dsw-alias-state-business-tertiary);
+  border-radius: 0 var(--dsw-radius-m) var(--dsw-radius-m) 0;
   margin: 16px 0 0;
-  padding-left: 14px;
+  padding: 8px 14px;
+}
+
+/* Streaming caret: a brand-colored blinking bar at the end of the trailing
+   text paragraph while the message streams. A pseudo-element keeps it out of
+   the DOM snapshot; reduced-motion renders a static bar. */
+.markdown[data-streaming] > p:last-child::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  border-radius: var(--dsw-radius-full);
+  background: var(--dsw-alias-state-business-primary);
+  animation: dsh-streaming-caret 1.1s steps(1) infinite;
+}
+
+@keyframes dsh-streaming-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markdown[data-streaming] > p:last-child::after {
+    animation: none;
+  }
 }
 
 .markdown pre {
@@ -175,6 +203,10 @@
   max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
+  /* Rounded card container with a hairline border so the table reads as one
+     surface; the scrollport keeps the radius on the wrapper. */
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-m);
 }
 
 .tableScroll table {
@@ -189,6 +221,10 @@
   border-bottom: 1px solid var(--dsw-alias-border-l3);
   border-top: none;
   font: var(--dsw-font-markdown-table-head);
+  /* Header tint: the skeleton token is a flat overlay on both palettes (not
+     an elevation rung), so the scrollport stays on the base surface and the
+     scrollbar contract is untouched. */
+  background: var(--dsw-alias-bg-skeleton);
   max-width: 320px;
   max-width: min(30vw, 320px);
   min-width: 100px;
@@ -203,14 +239,14 @@
   min-width: 100px;
 }
 
-.tableScroll th:first-child,
-.tableScroll td:first-child {
-  padding-left: 0;
+/* Zebra rows help the eye track long lines; the tint rides the interaction
+   hover token so it holds on both palettes. */
+.tableScroll tbody tr:nth-child(even) td {
+  background: var(--dsw-alias-interactive-bg-hover);
 }
 
-.tableScroll td:last-child {
-  padding-right: 0;
-}
+/* First and last cells keep the card's inner padding — the table sits in a
+   rounded scrollport now, so the flush edges are gone. */
 
 .tableScroll table code {
   font-size: 13px;

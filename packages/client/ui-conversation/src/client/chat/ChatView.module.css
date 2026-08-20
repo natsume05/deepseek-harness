@@ -50,6 +50,18 @@
   min-width: 0;
 }
 
+/* Enter animation for the trailing flow row: a new message (or the first row
+   of an opened history) settles in with a fade-and-rise. Only the last row
+   carries data-entering, so replay and mid-history mounts do not cascade. */
+.flowItem[data-entering] {
+  animation: dsh-chat-node-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);
+}
+
+@keyframes dsh-chat-node-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* A keyed renderer may intentionally decline its row after dispatch (the
    completed-turn tail does this when it owns neither actions nor extensions).
    An empty flex item must not consume the column gap. */
@@ -110,6 +122,10 @@
   .turnStatus {
     background-position: 0 0;
     background-size: 100% 100%;
+    animation: none;
+  }
+
+  .flowItem[data-entering] {
     animation: none;
   }
 }

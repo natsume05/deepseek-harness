@@ -35,6 +35,12 @@
 
 .chevron {
   color: var(--dsw-alias-label-secondary);
+  transition: transform var(--dsw-motion-duration) var(--dsw-motion-ease-out);
+}
+
+/* The disclosure flips its chevron while open (DisclosureRow owns data-open). */
+.root [data-open='true'] .chevron {
+  transform: rotate(180deg);
 }
 
 .title {
@@ -72,10 +78,26 @@
   line-height: 24px;
   white-space: pre-wrap;
   word-break: break-word;
+  /* Expand feedback: the disclosure mounts its content, so the body plays a
+     one-shot fade-and-settle on mount. */
+  animation: dsh-think-body-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);
+}
+
+@keyframes dsh-think-body-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .root[data-state='running'] .row::after {
     animation: none;
+  }
+
+  .thinkBody {
+    animation: none;
+  }
+
+  .chevron {
+    transition: none;
   }
 }
