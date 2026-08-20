@@ -71,6 +71,8 @@
 .percent {
   font-weight: 500;
   color: var(--dsw-alias-label-primary);
+  /* Instrument readout: tabular figures keep the occupancy number stable. */
+  font-variant-numeric: tabular-nums;
 }
 
 .headline {

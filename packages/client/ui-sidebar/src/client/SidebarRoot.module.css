@@ -172,8 +172,9 @@
 }
 
 /* New Session: 38px bar, 12px radius (figma 133:7634 geometry, squared-off
-   corners); the primary action rides the nebula gradient with a white label.
-   Collapsed it renders as the rail's plain icon control. */
+   corners); the primary action rides the action gradient with a white label
+   (the classic snapshot pins it to the solid info fill). Collapsed it
+   renders as the rail's plain icon control. */
 .newSession {
   flex: none;
   display: flex;
@@ -186,7 +187,7 @@
   box-sizing: border-box;
   border: none;
   border-radius: 12px;
-  background: var(--dsw-gradient-brand);
+  background: var(--dsw-gradient-action);
   color: #fff;
   font-size: 14px;
   font-weight: 500;

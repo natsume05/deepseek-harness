@@ -262,6 +262,14 @@ body {
   --dsw-specific-solar: rgb(255, 159, 67);
   /* Hero sun bloom opacity: visible on the modern track, zero under classic. */
   --dsw-hero-sun-opacity: 0.12;
+  /* Action gradient: a deeper nebula pair so white labels hold >= 4.5:1 on
+     the button surface in both palettes (the display brand gradient is too
+     bright on the dark track). The classic snapshot pins it to the solid
+     info fill. */
+  --dsw-gradient-action: linear-gradient(135deg, #3a6bdd 0%, #5c4fe8 100%);
+  /* Running indicator: the warm engine lamp on the modern track; classic
+     keeps the brand-blue running dot. */
+  --dsw-running-indicator: var(--dsw-specific-solar);
   /* Glass surfaces (modern visual style): the sidebar and floating panels
      tint the underlying surface and blur what is behind them. The classic
      snapshot resolves these back to solid fills and no blur. */
@@ -290,6 +298,9 @@ body[data-ds-dark-theme] {
   /* Night glass: the sidebar steps one shade off the main surface and floats
      over the nebula. */
   --dsw-specific-sidebar-fill: var(--dsw-static-space-850);
+  /* Deeper action gradient on the dark track: white labels still read on the
+     button surface while it stays brighter than the night base. */
+  --dsw-gradient-action: linear-gradient(135deg, #2f4fbf 0%, #463cc4 100%);
   --dsw-alias-bg-mask-1: rgba(0, 0, 0, 0.5);
   --dsw-alias-bg-mask-2: rgba(0, 0, 0, 0.2);
   --dsw-alias-bg-mask-3: rgba(0, 0, 0, 0.48);
@@ -478,6 +489,8 @@ body[data-ds-visual-style="classic"] {
   --dsw-nebula-glow: none;
   --dsw-stardust: none;
   --dsw-hero-sun-opacity: 0;
+  --dsw-gradient-action: var(--dsw-alias-button-info-fill);
+  --dsw-running-indicator: var(--dsw-static-deepseek-450);
   --dsw-glass-blur: none;
   --dsw-glass-sidebar-bg: var(--dsw-specific-sidebar-fill);
   --dsw-glass-floating-bg: var(--dsw-specific-menu);
@@ -491,6 +504,9 @@ body[data-ds-visual-style="classic"][data-ds-dark-theme] {
   /* The classic snapshot stays atmosphere-free. */
   --dsw-nebula-glow: none;
   --dsw-stardust: none;
+  --dsw-hero-sun-opacity: 0;
+  --dsw-gradient-action: var(--dsw-alias-button-info-fill);
+  --dsw-running-indicator: var(--dsw-static-deepseek-450);
   --dsw-glass-blur: none;
   --dsw-glass-sidebar-bg: var(--dsw-specific-sidebar-fill);
   --dsw-glass-floating-bg: var(--dsw-specific-menu);
