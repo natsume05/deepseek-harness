@@ -15,7 +15,10 @@
   gap: 0;
   border: 1px solid var(--dsw-alias-border-inverted);
   border-radius: 12px;
-  background: var(--dsw-specific-menu);
+  /* Glass floating surface (the classic snapshot resolves to the solid menu
+     fill with no blur). */
+  background: var(--dsw-glass-floating-bg);
+  backdrop-filter: var(--dsw-glass-blur);
   box-shadow: var(--dsw-shadow-lv3);
   /* The card mounts when the menu opens; a shared fade-and-settle marks it. */
   animation: dsh-menu-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);

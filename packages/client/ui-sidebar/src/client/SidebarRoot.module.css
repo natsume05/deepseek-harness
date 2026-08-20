@@ -13,7 +13,9 @@
   height: 100%;
   padding: 6px var(--dsh-sidebar-inline-padding);
   box-sizing: border-box;
-  background: var(--dsw-specific-sidebar-fill);
+  /* The rail's fill comes from the layout column's glass card; this shell
+     stays transparent so the nebula reads through. */
+  background: transparent;
   color: var(--dsw-alias-label-primary);
   font-size: 14px;
   /* The sidebar is elevated above the conversation surface, so a revealed

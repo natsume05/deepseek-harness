@@ -25,16 +25,11 @@
 /* Column surfaces: the center and details tracks render rounded floating
    cards over the base background, separated by the 8px gutter (the
    --dsw-space-2 margins mirror the GUTTER constant in AppFrame.tsx — the
-   drag handles center on the card edges). The sidebar stays a full-height
-   edge-to-edge tinted rail beside the cards (its occupant lays out at the
+   drag handles center on the card edges). The sidebar is a glass rail beside
+   the cards (tinted over the nebula; the classic snapshot resolves the glass
+   tokens back to the solid fill with no blur — its occupant lays out at the
    exact track width), and a closed details column (kept mounted at zero
    width) paints nothing. */
-.sidebarCard {
-  margin: var(--dsw-space-2) 0;
-  overflow: hidden;
-  background: var(--dsw-specific-sidebar-fill);
-}
-
 .centerCard,
 .detailsCard {
   min-width: 0;
@@ -42,6 +37,13 @@
   border-radius: var(--dsw-radius-l);
   border: 1px solid var(--dsw-alias-border-l1);
   box-shadow: var(--dsw-shadow-card);
+}
+
+.sidebarCard {
+  margin: var(--dsw-space-2) 0;
+  overflow: hidden;
+  background: var(--dsw-glass-sidebar-bg);
+  backdrop-filter: var(--dsw-glass-blur);
 }
 
 .centerCard {

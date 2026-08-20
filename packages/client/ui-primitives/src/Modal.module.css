@@ -31,7 +31,9 @@
   overflow: hidden;
   border: 1px solid var(--dsw-alias-border-inverted);
   border-radius: 24px;
-  background: var(--dsw-alias-bg-layer-2);
+  /* Glass dialog (the classic snapshot resolves to the solid layer-2 fill). */
+  background: var(--dsw-glass-floating-bg);
+  backdrop-filter: var(--dsw-glass-blur);
   box-shadow: var(--dsw-shadow-lv3);
   /* The card mounts with the modal; a fade-and-scale marks the entry. */
   animation: dsh-modal-dialog-in var(--dsw-motion-duration-slow) var(--dsw-motion-ease-out);

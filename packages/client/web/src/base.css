@@ -25,7 +25,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--dsw-alias-label-primary);
-  background: var(--dsw-alias-bg-base);
+  background-color: var(--dsw-alias-bg-base);
+  /* Deep-space atmosphere: the nebula and stardust layers ride the modern
+     track's tokens (the classic snapshot resolves them to none), fixed to
+     the viewport so the glow does not scroll with the page. */
+  background-image: var(--dsw-nebula-glow), var(--dsw-stardust);
+  background-attachment: fixed;
 }
 
 /* Form controls don't inherit the body font (UA sheets pin their families —
