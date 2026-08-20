@@ -319,7 +319,7 @@ flowchart LR
 | 阶段 | 状态 | 说明 |
 |---|---|---|
 | P0 基线 | 部分 | 计划书与审计清单完成；浏览器截图基线未做（开发环境无法启动终端工具场景），由后续人工截图补齐 |
-| P1 token 与风格切换 | ✅ 完成 | scales.css 尺度体系；classic/modern 双轨（`ui-theme.style` 设置项、`body[data-ds-visual-style]`、ThemePresenter、Host boot 注入）；Appearance 行新增视觉风格选择器 |
+| P1 token 与风格切换 | ✅ 完成 | scales.css 尺度体系；classic/modern 双轨（`ui-theme.style` 设置项、`body[data-ds-visual-style]`、ThemePresenter、Host boot 注入）；Appearance 行新增视觉风格选择器；现代轨浅色层级已与经典拉开（柔和灰底 + 卡片浮起） |
 | P2 布局 | ✅ 完成 | 三栏卡片化（8px 沟槽、圆角、轻阴影）、拖拽手柄加宽 + 品牌竖条、折叠 rail 过渡；侧边栏保持贴边色条 |
 | P3 会话区 | ✅ 完成 | 流式打字光标（纯 CSS）、仅尾部消息进入动画（挂载捕获 + memo 忽略，保持零 re-render 契约）、思考折叠动画、Markdown 表格卡片化 + 引用块品牌化 + 代码块描边、hero 品牌渐变光晕与渐变口号、StateDot 微动效、队列坞 hover/列表动画、DisclosureRow 统一展开动画 |
 | P4 输入/命令 | 部分 | 输入卡聚焦光环、停止按钮红色调、发送按下微缩；⌘K 命令面板评估后裁剪（现有 `ui-commands` popup 已 token 化且现代） |
