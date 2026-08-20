@@ -405,9 +405,39 @@
   background: var(--dsw-alias-button-info-hover);
 }
 
+/* Running stop action: the primary circle turns error-red so the running
+   state reads at a glance; the icon swap already distinguishes the gesture. */
+.primaryStop {
+  background: var(--dsw-alias-state-error-primary);
+}
+
+.primaryStop:hover:not(:disabled) {
+  background: var(--dsw-alias-state-error-secondary);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(-2px) scale(0.94);
+}
+
 .primary:disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+/* Focus ring: the whole capsule lights up with a soft brand halo while any
+   control inside holds focus (textarea, chips, selects). */
+.card:focus-within {
+  border-color: var(--dsw-alias-state-business-primary);
+  box-shadow:
+    var(--dsw-shadow-lv2),
+    0 0 0 3px var(--dsw-alias-state-business-tertiary);
+}
+
+/* The no-workspace trigger draws its own dashed affordance; keep its border
+   and shadow out of the focus treatment (it has no focusable interior). */
+.cardWorkspaceTrigger:focus-within {
+  border-color: transparent;
+  box-shadow: var(--dsw-shadow-lv2);
 }
 
 .retry {

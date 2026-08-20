@@ -775,7 +775,7 @@ export function InputBar({
               <Tooltip label={t('input.stop')} side="top" delayMs={500}>
                 <button
                   type="button"
-                  className={css.primary}
+                  className={clsx(css.primary, css.primaryStop)}
                   aria-label={t('input.stop')}
                   disabled={stop === undefined}
                   onMouseDown={keepFocus}
@@ -790,7 +790,7 @@ export function InputBar({
             <Tooltip label={primaryLabel} side="top" delayMs={500}>
               <button
                 type="button"
-                className={css.primary}
+                className={clsx(css.primary, primaryStops && css.primaryStop)}
                 aria-label={primaryLabel}
                 disabled={primaryStops ? stop === undefined : empty || disabled || machineBusy}
                 onMouseDown={keepFocus}

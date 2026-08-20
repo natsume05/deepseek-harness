@@ -78,22 +78,11 @@
   line-height: 24px;
   white-space: pre-wrap;
   word-break: break-word;
-  /* Expand feedback: the disclosure mounts its content, so the body plays a
-     one-shot fade-and-settle on mount. */
-  animation: dsh-think-body-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);
-}
-
-@keyframes dsh-think-body-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: none; }
+  /* Expand feedback rides the shared disclosure animation (DisclosureRow). */
 }
 
 @media (prefers-reduced-motion: reduce) {
   .root[data-state='running'] .row::after {
-    animation: none;
-  }
-
-  .thinkBody {
     animation: none;
   }
 

@@ -70,6 +70,10 @@
   outline-offset: -2px;
 }
 
+.header:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
 .header:disabled {
   cursor: default;
 }
@@ -105,6 +109,19 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  /* Expand feedback: the list mounts on expand; a one-shot fade settles it. */
+  animation: dsh-queue-list-in var(--dsw-motion-duration) var(--dsw-motion-ease-out);
+}
+
+@keyframes dsh-queue-list-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list {
+    animation: none;
+  }
 }
 
 .row {
