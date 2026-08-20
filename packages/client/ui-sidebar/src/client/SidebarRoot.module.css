@@ -172,8 +172,8 @@
 }
 
 /* New Session: 38px bar, 12px radius (figma 133:7634 geometry, squared-off
-   corners); the primary action rides the brand-blue info fill with a white
-   label. Collapsed it renders as the rail's plain icon control. */
+   corners); the primary action rides the nebula gradient with a white label.
+   Collapsed it renders as the rail's plain icon control. */
 .newSession {
   flex: none;
   display: flex;
@@ -186,18 +186,18 @@
   box-sizing: border-box;
   border: none;
   border-radius: 12px;
-  background: var(--dsw-alias-button-info-fill);
+  background: var(--dsw-gradient-brand);
   color: #fff;
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
   cursor: pointer;
   overflow: hidden;
-  transition: background-color 100ms ease;
+  transition: filter 100ms ease;
 }
 
 .newSession:hover {
-  background: var(--dsw-alias-button-info-hover);
+  filter: brightness(1.08);
 }
 
 .collapsed .newSession {

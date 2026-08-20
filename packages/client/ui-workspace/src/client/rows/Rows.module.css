@@ -26,7 +26,7 @@
 }
 
 /* Selected session and search rows use the sidebar's active-item language: a
-   solid tint plus a brand accent bar at the leading edge. */
+   solid tint plus a nebula-gradient accent bar at the leading edge. */
 .sessionRow.selected {
   background: var(--dsw-specific-sidebar-nav-item-active);
 }
@@ -41,7 +41,7 @@
   width: 3px;
   height: 16px;
   border-radius: var(--dsw-radius-full);
-  background: var(--dsw-alias-state-business-primary);
+  background: var(--dsw-gradient-brand);
 }
 
 .searchResultRow {

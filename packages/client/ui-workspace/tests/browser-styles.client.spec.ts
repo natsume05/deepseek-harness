@@ -109,7 +109,7 @@ describe('WorkspaceBrowser.module.css list', () => {
     expect(rowDeclarations('.sessionRow')?.get('position')).toBe('relative')
     expect(rowDeclarations('.sessionRow.selected::before')?.get('width')).toBe('3px')
     expect(rowDeclarations('.sessionRow.selected::before')?.get('background'))
-      .toBe('var(--dsw-alias-state-business-primary)')
+      .toBe('var(--dsw-gradient-brand)')
   })
 
   it('pins both rail controls to the shared left anchor during the column slide', () => {
