@@ -1,6 +1,6 @@
 # DeepSeek Harness Web GUI 使用指南：视觉风格切换
 
-本文说明如何启动带视觉升级的 DeepSeek Harness Web GUI，以及如何开启、切换和验证"视觉风格（经典 / 现代）"功能。
+本文说明如何启动带视觉升级的 DeepSeek Harness Web GUI，以及如何开启、切换和验证"视觉风格（经典 / 深空 / 鲸歌）"功能。
 
 ## 1. 这个功能是什么
 
@@ -8,8 +8,9 @@ Web GUI 视觉升级（按 [UI_REDESIGN_PLAN.md](UI_REDESIGN_PLAN.md) 实施）�
 
 1. **一套现代视觉语言**（已生效）：三栏卡片化布局、消息流式打字光标、Markdown 精排、输入卡聚焦光环、侧边栏选中品牌竖条、菜单/模态进出场动画、品牌渐变 hero 等。
 2. **视觉风格切换**（本期核心机制）：与明暗主题正交的第二个偏好维度——
-   - **现代（modern）**：默认，进行中的新设计观感；
-   - **经典（classic）**：升级前的观感快照，可随时一键退回。
+   - **经典（classic）**：默认，升级前的白纸观感快照，可随时一键退回；
+   - **深空（modern）**：进行中的深空设计观感；
+   - **鲸歌（whale-song）**：第三轨大胆主题——DeepSeek 鲸鱼 × 星际拓荒，在深空基础上叠加鲸鱼本体叙事。
 
 > **重要**：该功能只存在于源码（`ui-redesign` 分支）。npm 上发布的 `@deepseek-ai/dsh`（当前 `0.1.0-rc.7`）**不含**视觉升级，必须从源码构建运行才能体验。
 
@@ -65,9 +66,9 @@ http://127.0.0.1:3080
 2. 在设置页选择 **General（通用）** 分区。
 3. 找到 **外观（Appearance）** 区域——它有两行：
    - 第一行：主题（浅色 / 深色 / 跟随系统）；
-   - **第二行：视觉风格（Visual style）——经典（Classic）/ 现代（Modern）**，这就是切换功能。
+   - **第二行：视觉风格（Visual style）——经典（Classic）/ 深空（Deep Space）/ 鲸歌（Whale Song）**，这就是切换功能。
 
-点击"经典"或"现代"即完成切换，界面即时生效（纯 CSS 属性切换，无需刷新、无需重载）。
+点击"经典"、"深空"或"鲸歌"即完成切换，界面即时生效（纯 CSS 属性切换，无需刷新、无需重载）。
 
 ## 7. 验证切换是否真正生效
 
@@ -81,8 +82,8 @@ http://127.0.0.1:3080
 document.body.getAttribute('data-ds-visual-style')
 ```
 
-- 选"现代"→ 返回 `null`（modern 是默认轨，不写属性）；
-- 选"经典"→ 返回 `"classic"`。
+- 选"经典"→ 返回 `"classic"`（默认轨同样写属性）；
+- 选"深空"→ 返回 `"modern"`；选"鲸歌"→ 返回 `"whale-song"`。
 
 **② 设置持久化**
 
@@ -91,7 +92,7 @@ document.body.getAttribute('data-ds-visual-style')
 ```yaml
 ui-theme:
   preference: system   # 或 light / dark
-  style: classic       # 或 modern
+  style: classic       # 或 modern / whale-song
 ```
 
 **③ 刷新保持**
@@ -101,7 +102,7 @@ ui-theme:
 ## 8. 当前视觉状态说明
 
 - **两轨已有实际差异**：切换"经典 / 现代"现在可以看到明显变化——**现代**采用柔和中性浅灰底（页面底色 `#F9FAFB`），会话/详情卡片以白色浮起、侧栏与菜单逐级分层、代码块底色加深一档；**经典**保持升级前的纯白平铺观感。深浅两种明暗主题下都生效。
-- 差异会随后续打磨继续拉开：每次视觉调整只改默认（modern）轨的值，`classic` 永远冻结在"升级前观感"。
+- 差异会随后续打磨继续拉开：每次视觉调整只改深空（modern）与鲸歌（whale-song）轨的值，`classic` 永远冻结在"升级前观感"。
 - **已生效的现代视觉**（不依赖切换，任何风格下都可见）：三栏卡片化（圆角 + 沟槽 + 轻阴影）、消息流式品牌蓝打字光标、消息进入动画、思考过程折叠动画、Markdown 表格卡片化/引用块品牌竖线、空状态 hero 品牌蓝紫渐变光晕与渐变口号、输入卡聚焦光环、运行中停止按钮红色调、侧边栏选中行品牌竖条与蓝色"新建会话"主按钮、菜单/模态进出场动画等。
 
 ## 9. 常见问题
@@ -116,7 +117,7 @@ ui-theme:
 
 ## 10. 相关产物
 
-- 计划书与验收：根目录 [UI_REDESIGN_PLAN.md](UI_REDESIGN_PLAN.md)（含实施状态、裁剪项、验收清单）
+- 计划书与验收：根目录 [UI_REDESIGN_PLAN.md](UI_REDESIGN_PLAN.md)（含实施状态、裁剪项、验收清单）与 [WHALE_THEME_PLAN.md](WHALE_THEME_PLAN.md)（鲸歌主题设计方案）
 - 架构总结：根目录 [ARCHITECTURE_SUMMARY.md](ARCHITECTURE_SUMMARY.md)
 - 机制说明：`.agents/notes/implemented/feature/2026-08-15-visual-style-tracks-classic-modern.md`（classic/modern 双轨）与 `2026-08-15-web-ui-visual-redesign.md`（视觉升级实施记录）
 - 代码：`natsume05/deepseek-harness` 的 `ui-redesign` 分支（10 个功能 commit）

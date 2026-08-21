@@ -36,10 +36,11 @@ const CUBES: readonly { id: ThemePreference; labelKey: ThemeKey; Icon: typeof Ic
   { id: 'system', labelKey: 'appearance.system', Icon: IconFollowsystemOutline16 },
 ]
 
-/** Visual-style options: the pre-redesign snapshot and the modern design. */
+/** Visual-style options: the pre-redesign snapshot, the modern deep-space design, and the whale-song Leviathan track. */
 const STYLES: readonly { id: VisualStyle; labelKey: ThemeKey }[] = [
   { id: 'classic', labelKey: 'appearance.style.classic' },
   { id: 'modern', labelKey: 'appearance.style.modern' },
+  { id: 'whale-song', labelKey: 'appearance.style.whale-song' },
 ]
 
 /**

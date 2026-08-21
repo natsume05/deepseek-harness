@@ -9,6 +9,7 @@ export const zh = {
   'appearance.style.title': '视觉风格',
   'appearance.style.classic': '经典',
   'appearance.style.modern': '深空',
+  'appearance.style.whale-song': '鲸歌',
 } satisfies Record<string, string>
 
 /** The settings.theme namespace key union. */
@@ -23,4 +24,5 @@ export const en = {
   'appearance.style.title': 'Visual style',
   'appearance.style.classic': 'Classic',
   'appearance.style.modern': 'Deep Space',
+  'appearance.style.whale-song': 'Whale Song',
 } satisfies Record<ThemeKey, string>

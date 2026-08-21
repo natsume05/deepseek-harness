@@ -20,6 +20,7 @@ const COPY: Record<string, string> = {
   'appearance.style.title': 'Visual style',
   'appearance.style.classic': 'Classic',
   'appearance.style.modern': 'Modern',
+  'appearance.style.whale-song': 'Whale Song',
 }
 
 /** Empty global standard-kit hooks (the row reads neither). */
@@ -68,6 +69,7 @@ describe('AppearanceRow', () => {
     expect(screen.getByText('Visual style')).toBeDefined()
     expect(pressed(/Classic/)).toBe('true')
     expect(pressed(/Modern/)).toBe('false')
+    expect(pressed(/Whale Song/)).toBe('false')
   })
 
   it('click drives setTheme; selection follows the store mirror, not the click echo', () => {
@@ -89,5 +91,6 @@ describe('AppearanceRow', () => {
     act(() => { b.store.actions.sync('system', 'classic', 1) })
     expect(pressed(/Classic/)).toBe('true')
     expect(pressed(/Modern/)).toBe('false')
+    expect(pressed(/Whale Song/)).toBe('false')
   })
 })

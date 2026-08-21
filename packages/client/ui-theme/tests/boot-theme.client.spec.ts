@@ -3,7 +3,7 @@
 import { runInNewContext } from 'node:vm'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { injectBootTheme } from '../src/boot-theme.ts'
-import type { ThemePreference, VisualStyle } from '../src/theme-settings.ts'
+import { DEFAULT_VISUAL_STYLE, type ThemePreference, type VisualStyle } from '../src/theme-settings.ts'
 
 const DARK_ATTRIBUTE = 'data-ds-dark-theme'
 const VISUAL_STYLE_ATTRIBUTE = 'data-ds-visual-style'
@@ -14,7 +14,7 @@ function mockSystemDark(matches: boolean): void {
 
 function executeBootstrap(
   preference: ThemePreference = 'system',
-  style: VisualStyle = 'modern',
+  style: VisualStyle = DEFAULT_VISUAL_STYLE,
   html = '<html><body><div id="root"></div><script type="module"></script></body></html>',
 ): string {
   const injected = injectBootTheme(html, preference, style)
@@ -68,9 +68,9 @@ describe('theme boot index transform', () => {
     expect(document.body.hasAttribute(DARK_ATTRIBUTE)).toBe(false)
   })
 
-  it('applies the default modern visual style without an explicit style', () => {
+  it('applies the default classic visual style without an explicit style', () => {
     executeBootstrap()
-    expect(document.body.getAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe('modern')
+    expect(document.body.getAttribute(VISUAL_STYLE_ATTRIBUTE)).toBe(DEFAULT_VISUAL_STYLE)
   })
 
   it('appends the script to a body-less fragment', () => {

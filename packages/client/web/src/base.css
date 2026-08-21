@@ -55,3 +55,16 @@ textarea {
     transition-duration: 0.01ms !important;
   }
 }
+/* Whale-song track (DeepSeek whale x Outer Wilds): the shell stacks the
+   whale-song atmosphere layers over the night/dawn base - biolum plankton,
+   stardust, the nebula, the distant Eye glow, and the abyss tint. The
+   classic snapshot resolves these tokens to none / unused, and the modern
+   track keeps its own nebula + stardust pair above. */
+body[data-ds-visual-style="whale-song"] {
+  background-image:
+    var(--dsw-leviathan-biolum),
+    var(--dsw-stardust),
+    var(--dsw-nebula-glow),
+    var(--dsw-leviathan-eye-glow),
+    var(--dsw-leviathan-abyss);
+}

@@ -4,7 +4,7 @@
 
 主题插件：基于 --dsw-* token 基础样式表（静态尺度 + 别名语义层）的 ThemeRuntime。该服务拥有实时主题偏好（`light`／`dark`／`system`）与视觉风格（`classic`／`modern`），将 `system` 通过 `prefers-color-scheme` 解析为实际主题，并发布不可变的 `ThemeSnapshot`，通过 `theme/change` 事件通知变化；它绝不接触 DOM：ui-layout 的呈现器会应用解析后的快照（`html { color-scheme }`、`body[data-ds-dark-theme]`、`body[data-ds-visual-style]`，以及主题的别名 token 内联变量）。来自回环地址的浏览器会先以 `system` 立即提供该服务，随后在后台加载 `ui-theme.preference`，并将每次内置主题选择通过 Host settings API 写入；其本地提供方默认将设置存入 `$DSH_HOME/settings.yaml`。收到推送的 settings 变更时或重连后，浏览器都会重新拉取该设置；连续快速选择会按操作顺序携带 namespace revision 串行写入，最新写入被拒时则重新加载持久化值。远程浏览器无法访问特权 settings API，因此它的选择仅保留在进程内。已注册的第三方主题 id 仍是进程内扩展，不会跨越内置 settings schema；移除其中任意一个都绝不会覆盖最后一个持久化的内置偏好。该持久化边界由[Host settings 支撑的偏好决策](../../../.agents/notes/implemented/bug-fix/2026-08-06-host-backed-web-preferences.md)拥有。
 
-视觉风格（`ui-theme.style`）是与配色方案正交的独立偏好维度：`modern`（默认）是进行中的新设计，`classic` 在 `design-platform.css` 的 `body[data-ds-visual-style="classic"]` 块中冻结改造前的 token 值，让用户可以随时退回。呈现器只切换该属性；风格切换不触发任何组件重渲染或 JS 重算。
+视觉风格（`ui-theme.style`）是与配色方案正交的独立偏好维度：`classic`（默认）在 `design-platform.css` 的 `body[data-ds-visual-style="classic"]` 块中冻结改造前的 token 值；`modern` 是进行中的深空设计，由默认 `body` 块承载；`whale-song`（鲸歌）是第三轨大胆主题（DeepSeek 鲸鱼 × 星际拓荒），在 `body[data-ds-visual-style="whale-song"]` 块中叠加于 modern 基础之上。呈现器只切换该属性；风格切换不触发任何组件重渲染或 JS 重算。
 
 当主机组合包含 HTTP 服务器时，主机侧紧接 `<body>` 起始标签注入同步引导代码。每份 index 响应会嵌入已注册的 Host 设置 `ui-theme.preference` 与 `ui-theme.style`（无 settings provider 时嵌入各自默认值）；浏览器按操作系统配色解析 `system`，随后在外壳加载页面渲染前设置 `color-scheme`、`body[data-ds-dark-theme]` 与 `body[data-ds-visual-style]`。不含 HTTP 服务器的组合不受影响，插件树激活后，ThemeRuntime 与 ui-layout 仍分别是客户端状态和后续 DOM 更新的权威来源。
 

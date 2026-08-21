@@ -1,11 +1,12 @@
 /** Appearance row store: snapshot-mirror action and the revision guard. */
 import { describe, expect, it } from 'vitest'
 import { createAppearanceRowStore } from '../src/client/settings-store.ts'
+import { DEFAULT_VISUAL_STYLE } from '../src/theme-settings.ts'
 
 describe('createAppearanceRowStore', () => {
-  it('init shape: system preference with modern style at revision -1', () => {
+  it('init shape: system preference with the default style at revision -1', () => {
     const store = createAppearanceRowStore().create()
-    expect(store.getSnapshot()).toEqual({ preference: 'system', style: 'modern', revision: -1 })
+    expect(store.getSnapshot()).toEqual({ preference: 'system', style: DEFAULT_VISUAL_STYLE, revision: -1 })
   })
 
   it('sync mirrors the preference, style, and revision', () => {

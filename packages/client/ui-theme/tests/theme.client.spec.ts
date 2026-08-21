@@ -8,6 +8,7 @@ import type {
   ThemeTokenOverrides,
 } from '@deepseek-ai/dsh-client-ui-theme/client'
 import { ThemeRuntime } from '@deepseek-ai/dsh-client-ui-theme/client'
+import { DEFAULT_VISUAL_STYLE } from '../src/theme-settings.ts'
 
 const make = (host = stubSettingsScope<ThemeSettings>()): {
   ctx: Context
@@ -26,7 +27,7 @@ describe('ThemeRuntime', () => {
     const { theme } = make()
     const snapshot = theme.getTheme()
     expect(snapshot.preference).toBe('system')
-    expect(snapshot.style).toBe('modern')
+    expect(snapshot.style).toBe(DEFAULT_VISUAL_STYLE)
     // jsdom matchMedia is absent; system resolves to light.
     expect(snapshot.active.id).toBe('light')
     expect(snapshot.active.colorScheme).toBe('light')
@@ -35,15 +36,15 @@ describe('ThemeRuntime', () => {
 
   it('setStyle switches, writes through the scope, republishes, and keeps DOM untouched', () => {
     const { theme, events, host } = make()
-    theme.setStyle('classic')
-    expect(theme.getTheme().style).toBe('classic')
-    expect(host.set).toHaveBeenCalledWith('style', 'classic')
+    theme.setStyle('whale-song')
+    expect(theme.getTheme().style).toBe('whale-song')
+    expect(host.set).toHaveBeenCalledWith('style', 'whale-song')
     expect(events).toHaveLength(1)
     expect(events[0]).toBe(theme.getTheme())
     // The service never touches presentation state.
     expect(document.body.hasAttribute('data-ds-visual-style')).toBe(false)
     // Same-value set is a no-op (no extra event).
-    theme.setStyle('classic')
+    theme.setStyle('whale-song')
     expect(events).toHaveLength(1)
     expect(host.set).toHaveBeenCalledOnce()
   })
@@ -81,11 +82,11 @@ describe('ThemeRuntime', () => {
 
   it('adopts a published visual style without writing it back', () => {
     const { theme, events, host } = make()
-    host.publish({ status: 'ready', value: { preference: 'system', style: 'classic' }, revision: 1, writable: true })
-    expect(theme.getTheme().style).toBe('classic')
+    host.publish({ status: 'ready', value: { preference: 'system', style: 'whale-song' }, revision: 1, writable: true })
+    expect(theme.getTheme().style).toBe('whale-song')
     expect(events).toHaveLength(1)
     expect(host.set).not.toHaveBeenCalled()
-    host.publish({ value: { preference: 'system', style: 'classic' }, revision: 2 })
+    host.publish({ value: { preference: 'system', style: 'whale-song' }, revision: 2 })
     expect(events).toHaveLength(1)
   })
 

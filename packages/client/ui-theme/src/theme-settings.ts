@@ -5,8 +5,8 @@ import z from '@deepseek-ai/schemastery'
 /** Built-in preferences accepted at the registry and settings boundaries. */
 export const THEME_PREFERENCES = ['light', 'dark', 'system'] as const
 
-/** Visual styles: the classic snapshot (pre-redesign tokens) and the modern design. */
-export const VISUAL_STYLES = ['classic', 'modern'] as const
+/** Visual styles: the classic snapshot (pre-redesign tokens), the modern deep-space design, and the whale-song Leviathan track. */
+export const VISUAL_STYLES = ['classic', 'modern', 'whale-song'] as const
 
 /** Settings namespace owned by the theme plugin. */
 export const THEME_SETTINGS_NAMESPACE = 'ui-theme'
@@ -27,7 +27,7 @@ export type VisualStyle = typeof VISUAL_STYLES[number]
 export const DEFAULT_PREFERENCE: ThemePreference = 'system'
 
 /** Default visual style (the modern design); `classic` is the rollback snapshot. */
-export const DEFAULT_VISUAL_STYLE: VisualStyle = 'modern'
+export const DEFAULT_VISUAL_STYLE: VisualStyle = 'classic'
 
 /** Durable theme section shared by the Host schema and the browser scope. */
 export interface ThemeSettings {

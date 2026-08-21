@@ -44,7 +44,7 @@ describe('ui-theme host', () => {
     const fiber = ctx.plugin({ apply })
     await fiber.await()
     expect(transform?.('<body></body>')).toContain('const preference = "system"')
-    expect(transform?.('<body></body>')).toContain('const style = "modern"')
+    expect(transform?.('<body></body>')).toContain(`const style = "${DEFAULT_VISUAL_STYLE}"`)
     await ctx.settings.update(settingsNamespace(THEME_SETTINGS_NAMESPACE), { preference: 'dark', style: 'classic' })
     expect(transform?.('<body></body>')).toContain('const preference = "dark"')
     expect(transform?.('<body></body>')).toContain('const style = "classic"')
