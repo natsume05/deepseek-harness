@@ -38,3 +38,10 @@ apps/web/dist/
 worktrees/
 .agents/worktrees/
 .typert-*/
+
+# --- Local DeepSeek Harness data (never commit) ---
+# Harness home + credential/settings documents; API keys live only here.
+.dsh-home/
+**/.credentials.yaml
+**/settings.yaml
+.env.local
