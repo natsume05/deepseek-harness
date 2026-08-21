@@ -150,6 +150,21 @@ const BUILTIN_INSPECT_TOKENS: readonly ThemeTokenInspection[] = Object.freeze([
  * sensing, not presentation) and re-emits when the OS scheme flips while the
  * preference is `system`.
  */
+
+/**
+ * Read the visual style the Host-rendered boot script stamped on <body>
+ * (`data-ds-visual-style`) before any plugin activated. The persisted style
+ * is already rendered by then, so adopting it synchronously closes the window
+ * where an async settings read is still in flight: without it, the in-memory
+ * default (`modern`) could mask a persisted `classic` and make an early
+ * setStyle('modern') a silent no-op.
+ * @returns the boot-stamped style, or undefined when absent/invalid.
+ */
+function readBootVisualStyle(): VisualStyle | undefined {
+  if (typeof document === 'undefined') return undefined
+  const value = document.body?.getAttribute('data-ds-visual-style')
+  return isVisualStyle(value) ? value : undefined
+}
 export class ThemeRuntime {
   private readonly ctx: Context
   private readonly host: SettingsScope<ThemeSettings>
@@ -172,7 +187,10 @@ export class ThemeRuntime {
     this.ctx = ctx
     this.host = host
     this.preference = DEFAULT_PREFERENCE
-    this.style = DEFAULT_VISUAL_STYLE
+    // The boot script already rendered the persisted style on <body>; align
+    // the in-memory value with it before the async settings read lands (see
+    // readBootVisualStyle). The host remains authoritative once adopt() runs.
+    this.style = readBootVisualStyle() ?? DEFAULT_VISUAL_STYLE
     // Non-browser runs (node e2e booting the client tree) have no matchMedia.
     this.media = typeof matchMedia === 'undefined' ? undefined : matchMedia('(prefers-color-scheme: dark)')
     this.snapshot = this.buildSnapshot()

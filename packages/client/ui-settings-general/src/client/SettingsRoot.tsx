@@ -11,6 +11,7 @@
  * to the step, so a mounted-but-deciding step paints nothing here.
  */
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import {
   IconAgentPresetOutline16, IconCloseOutline16, IconDataOutline16,
@@ -150,14 +151,20 @@ export function SettingsRoot(props: SettingsRootComponentProps) {
       >
         {renderSlot('settings.trigger', { wide })}
       </button>
-      {open && (
+      {/* The panel is a full-viewport overlay; render it through a body
+          portal so ancestor surfaces (the sidebar's glass backdrop-filter in
+          the deep-space track creates a containing block that would trap a
+          fixed-position descendant and clip the dialog to the sidebar) cannot
+          constrain or clip it. */}
+      {open && createPortal(
         <SettingsPanel
           rows={rows}
           renderSlot={renderSlot}
           activeId={activeId}
           onSelect={setActiveId}
           onClose={close}
-        />
+        />,
+        document.body,
       )}
       {/* Dialog chrome and `#root` inert ownership live inside each step's
           visible branch. A step still deciding (private facts loading)

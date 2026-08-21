@@ -6,7 +6,7 @@ body {
      track's surfaces, and the pale nebula white for the light track's base.
      Referenced only by the modern track; the classic snapshot keeps the
      neutral bluish ladder. */
-  --dsw-static-space-100: rgb(242, 245, 252);
+  --dsw-static-space-100: rgb(234, 240, 252);
   --dsw-static-space-800: rgb(28, 36, 60);
   --dsw-static-space-850: rgb(22, 29, 50);
   --dsw-static-space-900: rgb(16, 22, 40);
@@ -256,11 +256,11 @@ body {
   /* Deep-space atmosphere (modern visual style): nebula glow, stardust
      grain, and the warm solar accent. The classic snapshot resets these to
      none / unused. */
-  --dsw-nebula-glow: radial-gradient(1200px 800px at 12% -10%, rgba(65, 118, 230, 0.16), transparent 60%),
-    radial-gradient(1000px 700px at 88% 108%, rgba(106, 92, 245, 0.12), transparent 55%);
-  --dsw-stardust: radial-gradient(1px 1px at 24% 32%, rgba(30, 64, 175, 0.10), transparent 100%),
-    radial-gradient(1px 1px at 68% 18%, rgba(65, 118, 230, 0.12), transparent 100%),
-    radial-gradient(1px 1px at 82% 64%, rgba(106, 92, 245, 0.10), transparent 100%);
+  --dsw-nebula-glow: radial-gradient(1200px 800px at 12% -10%, rgba(65, 118, 230, 0.22), transparent 60%),
+    radial-gradient(1000px 700px at 88% 108%, rgba(106, 92, 245, 0.17), transparent 55%);
+  --dsw-stardust: radial-gradient(1px 1px at 24% 32%, rgba(30, 64, 175, 0.14), transparent 100%),
+    radial-gradient(1px 1px at 68% 18%, rgba(65, 118, 230, 0.16), transparent 100%),
+    radial-gradient(1px 1px at 82% 64%, rgba(106, 92, 245, 0.14), transparent 100%);
   --dsw-specific-solar: rgb(255, 159, 67);
   /* Hero sun bloom opacity: visible on the modern track, zero under classic. */
   --dsw-hero-sun-opacity: 0.12;
