@@ -41,6 +41,11 @@
   color: var(--dsw-alias-label-primary);
 }
 
+.toggle:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: -2px;
+}
+
 .toggle.on {
   color: var(--dsw-alias-state-business-primary);
 }
@@ -81,5 +86,5 @@
 
 /* Whale-song track: the slider rides the sonar cyan accent. */
 :global(body[data-ds-visual-style="whale-song"]) .volume input[type='range'] {
-  accent-color: var(--dsw-static-leviathan-cyan);
+  accent-color: var(--dsw-leviathan-accent);
 }

@@ -631,6 +631,9 @@ body[data-ds-visual-style="whale-song"] {
     radial-gradient(1px 1px at 82% 64%, rgba(62, 201, 199, 0.16), transparent 100%);
   /* Running indicator: the whale-song sonar lamp (Giant's Deep biolum). */
   --dsw-running-indicator: var(--dsw-static-leviathan-cyan);
+  /* Control accent with >= 4.5:1 on the dawn base (the bright cyan is only
+     safe on the night track, where it is reserved for decoration). */
+  --dsw-leviathan-accent: rgb(11, 104, 120);
   /* Action gradient: a deep-sea pair so white labels still hold >= 4.5:1. */
   --dsw-gradient-action: linear-gradient(135deg, #3a6bdd 0%, #1f9e9b 100%);
   /* Planet-coded states: forest success, ember warning, bramble error. */
@@ -674,6 +677,8 @@ body[data-ds-visual-style="whale-song"][data-ds-dark-theme] {
   --dsw-specific-input-major: var(--dsw-static-space-900);
   --dsw-specific-tip: var(--dsw-static-space-850);
   --dsw-running-indicator: var(--dsw-static-leviathan-cyan);
+  /* Control accent on the night track: the bright biolum cyan (>= 9:1). */
+  --dsw-leviathan-accent: var(--dsw-static-leviathan-cyan);
   --dsw-gradient-action: linear-gradient(135deg, #1f5fbf 0%, #157f7c 100%);
   --dsw-alias-state-error-primary: var(--dsw-static-leviathan-bramble);
   --dsw-alias-state-error-secondary: rgb(229, 72, 77);

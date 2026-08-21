@@ -8,6 +8,8 @@
   flex-direction: column;
   height: 100%;
   min-width: 0;
+  /* Containing block for the whale-song wormhole pulse. */
+  position: relative;
   background: var(--dsw-alias-bg-base);
 
   /* Shared width axis for the whole column: one content width W
@@ -362,4 +364,28 @@
    mounted but invisible so no wrong layout flashes before the phase lands. */
 .root[data-phase='settling'] .composerSeat {
   visibility: hidden;
+}
+
+/* Whale-song wormhole pulse: a faint radial flash replaying on every session
+   switch (the span is keyed by session, so switching remounts it). Inert
+   outside the whale-song track; the global reduced-motion backstop collapses
+   the one-shot to a static final (opacity 0) state. */
+.wormhole {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+:global(body[data-ds-visual-style="whale-song"]) .wormhole {
+  background:
+    radial-gradient(460px 340px at 50% 40%, color-mix(in srgb, var(--dsw-static-leviathan-cyan) 14%, transparent), transparent 70%);
+  animation: dsh-wormhole-pulse 160ms ease-out forwards;
+}
+
+@keyframes dsh-wormhole-pulse {
+  0% { transform: scale(0.985); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
 }

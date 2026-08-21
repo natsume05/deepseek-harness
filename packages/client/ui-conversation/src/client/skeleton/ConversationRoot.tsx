@@ -185,6 +185,10 @@ export function ConversationRoot({
 
   return (
     <div className={css.root} data-phase={phase}>
+      {/* Whale-song wormhole pulse: a faint radial flash replaying on every
+          session switch (keyed remount; decorative, aria-hidden, and inert
+          outside the whale-song track). */}
+      {sessionId !== undefined && <span key={sessionId} className={css.wormhole} aria-hidden="true" />}
       {renderSlot('conversation.session.header', {})}
       <div className={css.scrollBody} data-conversation-scroll="">
         {renderSlot('conversation.session', {})}

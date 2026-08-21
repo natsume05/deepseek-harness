@@ -269,6 +269,13 @@ describe('Hero chrome', () => {
     expect(view.getByText('Into the Unknown')).toBeTruthy()
     expect(view.getByText('Follow the Signal')).toBeTruthy()
   })
+
+  it('keys the whale-song wormhole pulse span by the open session', () => {
+    const b = mount(conversationSnapshot())
+    const span = b.view.container.querySelector('[class*="wormhole"]')
+    expect(span).not.toBeNull()
+    expect(span?.getAttribute('aria-hidden')).toBe('true')
+  })
 })
 
 describe('ConversationRoot resident composer', () => {
