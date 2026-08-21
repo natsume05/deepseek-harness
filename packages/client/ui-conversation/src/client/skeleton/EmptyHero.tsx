@@ -126,9 +126,19 @@ export function HeroShell({ t, children }: HeroShellProps) {
         <div className={css.headline}>
           {/* figma 34:10412: fish 34×25 leading the headline, gap 10. */}
           <span className={css.fishHitbox}>
-            <FishLogo size={34} className={css.fish} />
+            {/* Whale-song star halo: the ring and the trailing light only
+                surface under the whale-song track (CSS-swapped through the
+                body style attribute); classic/deep-space keep the plain mark. */}
+            <span className={css.starRing} aria-hidden="true" />
+            <span className={css.fishScale}>
+              <FishLogo size={34} className={css.fish} />
+            </span>
+            <span className={css.fishTrail} aria-hidden="true" />
           </span>
-          <span className={css.headlineText}>{t('hero.headline')}</span>
+          {/* The shared slogan and its whale-song variant occupy the same grid
+              cell; the body style attribute swaps which one renders. */}
+          <span className={css.headlineText} data-hero-headline="shared">{t('hero.headline')}</span>
+          <span className={css.headlineText} data-hero-headline="whale-song">{t('hero.headlineWhaleSong')}</span>
           <span className={css.previewBadge}>{t('hero.preview')}</span>
         </div>
         <div className={css.body}>
@@ -138,6 +148,15 @@ export function HeroShell({ t, children }: HeroShellProps) {
               ConversationRoot.module.css [data-phase='hero']. */}
         </div>
       </div>
+      {/* Whale-song scene corners: the distant Eye signal (top-right) and the
+          campfire with rising embers (bottom-left) — pure CSS, aria-hidden,
+          and invisible outside the whale-song track. */}
+      <span className={css.eye} aria-hidden="true"><span className={css.eyeCore} /></span>
+      <span className={css.campfire} aria-hidden="true">
+        <span className={css.ember} />
+        <span className={css.ember} />
+        <span className={css.ember} />
+      </span>
       {children}
     </div>
   )

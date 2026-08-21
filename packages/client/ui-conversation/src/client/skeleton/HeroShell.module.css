@@ -9,6 +9,8 @@
   height: 100%;
   min-width: 0;
   padding: 0 24px;
+  /* Containing block for the whale-song scene corners (Eye + campfire). */
+  position: relative;
 }
 
 /* Cap matches the InputBar card. Glow may paint past the sides. */
@@ -74,6 +76,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* Containing block for the star halo and the trailing light. */
+  position: relative;
+}
+
+/* Scale wrapper: the whale-song track enlarges the mark without moving the
+   layout box or fighting the drift animation on `.fish`. */
+.fishScale {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: 50% 60%;
 }
 
 /* Keep the hero mark in the same primary ink as its headline. */
@@ -205,4 +218,164 @@
   font-size: 12px;
   line-height: 18px;
   color: var(--dsw-alias-state-error-primary);
+}
+
+/* ------- Whale-song hero scene (DeepSeek whale x Outer Wilds) -------
+   The star halo, the trailing light, the distant Eye signal, and the
+   campfire all live in the hero DOM but stay invisible unless the whale-song
+   track is active (body[data-ds-visual-style="whale-song"]). Everything is
+   token-colored, transform/opacity-only, and gated by prefers-reduced-motion
+   through the shared backstop plus the (hover: hover) media queries below. */
+
+.eye,
+.campfire,
+.starRing,
+.fishTrail {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A dashed halo with three pinprick stars riding it. */
+.starRing {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 48px;
+  height: 48px;
+  border: 1px dashed var(--dsw-static-leviathan-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(1.5px 1.5px at 22% 30%, var(--dsw-static-leviathan-cyan), transparent 100%),
+    radial-gradient(1.5px 1.5px at 76% 24%, var(--dsw-static-leviathan-ice), transparent 100%),
+    radial-gradient(1.5px 1.5px at 64% 80%, var(--dsw-static-leviathan-cyan), transparent 100%);
+}
+
+/* The wake behind the cruising whale: a short comet light trailing to the
+   left, drawn in on the whale-song track. */
+.fishTrail {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  width: 30px;
+  height: 5px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--dsw-static-leviathan-cyan));
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: right center;
+}
+
+/* The Eye of the Universe: a faint distant signal, top-right of the hero. */
+.eye {
+  position: absolute;
+  top: 46px;
+  right: 64px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid color-mix(in srgb, var(--dsw-static-deepseek-400) 55%, transparent);
+  border-radius: 50%;
+}
+
+.eyeCore {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--dsw-static-deepseek-400);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--dsw-static-deepseek-400) 60%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+/* The campfire: a warm ember bed with three rising sparks, bottom-left. */
+.campfire {
+  position: absolute;
+  left: 28px;
+  bottom: 26px;
+  width: 20px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--dsw-specific-solar) 75%, transparent), transparent 75%);
+}
+
+.ember {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--dsw-static-leviathan-ember);
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--dsw-static-leviathan-ember) 70%, transparent);
+  opacity: 0;
+  animation: dsh-hero-ember-rise 4.5s ease-in-out infinite;
+}
+
+.ember:nth-child(2) {
+  left: 30%;
+  animation-delay: 1.5s;
+}
+
+.ember:nth-child(3) {
+  left: 70%;
+  animation-delay: 3s;
+}
+
+/* The whale-song track swaps the shared slogan for its own. */
+.headlineText[data-hero-headline='whale-song'] {
+  display: none;
+}
+
+:global(body[data-ds-visual-style="whale-song"]) .headlineText[data-hero-headline='shared'] {
+  display: none;
+}
+
+:global(body[data-ds-visual-style="whale-song"]) .headlineText[data-hero-headline='whale-song'] {
+  display: block;
+}
+
+:global(body[data-ds-visual-style="whale-song"]) .starRing,
+:global(body[data-ds-visual-style="whale-song"]) .fishTrail,
+:global(body[data-ds-visual-style="whale-song"]) .eye,
+:global(body[data-ds-visual-style="whale-song"]) .campfire {
+  opacity: 1;
+}
+
+/* The whale is the protagonist: slightly larger, on a slower cruise. */
+:global(body[data-ds-visual-style="whale-song"]) .fishScale {
+  transform: scale(1.45);
+}
+
+@keyframes dsh-hero-whale-cruise {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(3px, -3px) rotate(2.5deg); }
+  50% { transform: translate(-2px, -5px) rotate(-2deg); }
+  75% { transform: translate(-3px, -1px) rotate(1.5deg); }
+}
+
+@keyframes dsh-hero-eye-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.18); opacity: 0.9; }
+}
+
+@keyframes dsh-hero-ember-rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translate(-6px, -46px); opacity: 0; }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :global(body[data-ds-visual-style="whale-song"]) .fish {
+    animation-name: dsh-hero-whale-cruise;
+    animation-duration: 13s;
+  }
+
+  :global(body[data-ds-visual-style="whale-song"]) .eye {
+    animation: dsh-hero-eye-pulse 7s ease-in-out infinite;
+  }
+
+  :global(body[data-ds-visual-style="whale-song"]) .fishTrail {
+    transform: translateY(-50%) scaleX(1);
+    transition: transform 1.6s ease;
+  }
 }

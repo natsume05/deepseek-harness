@@ -263,6 +263,12 @@ describe('Hero chrome', () => {
     expect(view.getByText('Into the Unknown')).toBeTruthy()
     expect(view.getByText('Preview')).toBeTruthy()
   })
+
+  it('renders the whale-song hero slogan beside the shared one (CSS swaps by track)', () => {
+    const view = render(<HeroShell t={makeTranslate(en, commonEn)} />)
+    expect(view.getByText('Into the Unknown')).toBeTruthy()
+    expect(view.getByText('Follow the Signal')).toBeTruthy()
+  })
 })
 
 describe('ConversationRoot resident composer', () => {
