@@ -10,6 +10,11 @@ export const zh = {
   'appearance.style.classic': '经典',
   'appearance.style.modern': '深空',
   'appearance.style.whale-song': '鲸歌',
+  'ambience.play': '播放鲸歌音景',
+  'ambience.pause': '暂停鲸歌音景',
+  'ambience.resume': '点击续播鲸歌音景',
+  'ambience.volume': '鲸歌音景音量',
+  'ambience.label': '鲸歌音景',
 } satisfies Record<string, string>
 
 /** The settings.theme namespace key union. */
@@ -25,4 +30,9 @@ export const en = {
   'appearance.style.classic': 'Classic',
   'appearance.style.modern': 'Deep Space',
   'appearance.style.whale-song': 'Whale Song',
+  'ambience.play': 'Play whale-song ambience',
+  'ambience.pause': 'Pause whale-song ambience',
+  'ambience.resume': 'Click to resume whale-song ambience',
+  'ambience.volume': 'Whale-song ambience volume',
+  'ambience.label': 'Whale-song ambience',
 } satisfies Record<ThemeKey, string>

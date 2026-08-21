@@ -8,14 +8,20 @@ import {
   DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, THEME_SETTINGS_NAMESPACE, ThemeSettingsSchema,
   type ThemePreference, type ThemeSettings, type VisualStyle,
 } from './theme-settings.ts'
+import { AMBIENCE_SETTINGS_NAMESPACE, AmbienceSettingsSchema } from './ambience-settings.ts'
 
 export {
   DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, THEME_PREFERENCE_FIELD, THEME_PREFERENCES,
   THEME_SETTINGS_NAMESPACE, VISUAL_STYLE_FIELD, VISUAL_STYLES,
   type ThemePreference, type ThemeSettings, type VisualStyle,
 } from './theme-settings.ts'
+export {
+  AMBIENCE_DEFAULT_VOLUME, AMBIENCE_ENABLED_FIELD, AMBIENCE_SETTINGS_NAMESPACE, AMBIENCE_VOLUME_FIELD,
+  type AmbienceSettings,
+} from './ambience-settings.ts'
 
 const THEME_NAMESPACE = settingsNamespace(THEME_SETTINGS_NAMESPACE)
+const AMBIENCE_NAMESPACE = settingsNamespace(AMBIENCE_SETTINGS_NAMESPACE)
 
 /** Read the registered section or use the schema defaults without a settings provider. */
 function readSettings(ctx: Context): { preference: ThemePreference; style: VisualStyle } {
@@ -34,6 +40,7 @@ function readSettings(ctx: Context): { preference: ThemePreference; style: Visua
 export function apply(ctx: Context): void {
   ctx.inject(['settings'], (settingsCtx) => {
     settingsCtx.settings.register(THEME_NAMESPACE, ThemeSettingsSchema)
+    settingsCtx.settings.register(AMBIENCE_NAMESPACE, AmbienceSettingsSchema)
   })
   ctx.inject(['webServer'], (httpCtx) => {
     httpCtx.effect(

@@ -18,6 +18,10 @@ import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type { AppearanceRowInjected } from './AppearanceRow.tsx'
 import { AppearanceRow } from './AppearanceRow.tsx'
 import { createAppearanceRowStore } from './settings-store.ts'
+import { AmbienceButton, type AmbienceButtonInjected } from './AmbienceButton.tsx'
+import { createAmbienceStore } from './ambience-store.ts'
+import { AmbienceRuntime, type AmbienceSnapshot } from './ambience.ts'
+import { AMBIENCE_SETTINGS_NAMESPACE, type AmbienceSettings } from '../ambience-settings.ts'
 import { en, zh, type ThemeKey } from './locales.ts'
 import {
   DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, isThemePreference, isVisualStyle,
@@ -26,6 +30,10 @@ import {
 } from '../theme-settings.ts'
 
 export type { AppearanceRowComponentProps, AppearanceRowInjected } from './AppearanceRow.tsx'
+export { AmbienceRuntime, AMBIENCE_SOURCE, type AmbienceSnapshot, type AudioFactory } from './ambience.ts'
+export type { AmbienceButtonComponentProps, AmbienceButtonInjected } from './AmbienceButton.tsx'
+export type { AmbienceRowState } from './ambience-store.ts'
+export type { AmbienceSettings } from '../ambience-settings.ts'
 export type { AppearanceRowState } from './settings-store.ts'
 export type { ThemeKey } from './locales.ts'
 export type { ThemePreference, ThemeSettings, VisualStyle } from '../theme-settings.ts'
@@ -445,12 +453,46 @@ export function apply(ctx: ClientContext): void {
       setStyle: (id) => { theme.setStyle(id) },
     }
   }
-  ctx.slots.inject('settings.general.item', () => ctx.slots.register({
-    name: 'settings.general.item',
-    id: 'appearance',
-    order: 10,
-    store,
-    locale: SETTINGS_NS,
-    inject: injected,
-  }, AppearanceRow))
+  // Whale-song soundscape: a second durable namespace, service, and an
+  // Appearance-section row (toggle + volume) rendering its snapshot.
+  const ambienceHost = ctx.settingsScope.bind<AmbienceSettings>({ namespace: AMBIENCE_SETTINGS_NAMESPACE })
+  const ambience = new AmbienceRuntime(ctx, ambienceHost)
+  ctx.provide('ambience', ambience)
+
+  const ambienceStore = createAmbienceStore()
+  let ambienceBound: BoundActions<typeof ambienceStore> | undefined
+  const syncAmbience = (snapshot: AmbienceSnapshot): void => {
+    ambienceBound?.sync(snapshot)
+  }
+  ctx.on('ambience/change', syncAmbience)
+  const ambienceInjected = (actions: BoundActions<typeof ambienceStore>): AmbienceButtonInjected => {
+    ambienceBound = actions
+    syncAmbience(ambience.getAmbience())
+    return {
+      toggle: () => { void ambience.toggle() },
+      setVolume: (volume) => { ambience.setVolume(volume) },
+    }
+  }
+  ctx.slots.inject('settings.general.item', () => {
+    const appearance = ctx.slots.register({
+      name: 'settings.general.item',
+      id: 'appearance',
+      order: 10,
+      store,
+      locale: SETTINGS_NS,
+      inject: injected,
+    }, AppearanceRow)
+    const ambience = ctx.slots.register({
+      name: 'settings.general.item',
+      id: 'ambience',
+      order: 20,
+      store: ambienceStore,
+      locale: SETTINGS_NS,
+      inject: ambienceInjected,
+    }, AmbienceButton)
+    return () => {
+      appearance()
+      ambience()
+    }
+  })
 }

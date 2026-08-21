@@ -6,6 +6,8 @@
 
 视觉风格（`ui-theme.style`）是与配色方案正交的独立偏好维度：`classic`（默认）在 `design-platform.css` 的 `body[data-ds-visual-style="classic"]` 块中冻结改造前的 token 值；`modern` 是进行中的深空设计，由默认 `body` 块承载；`whale-song`（鲸歌）是第三轨大胆主题（DeepSeek 鲸鱼 × 星际拓荒），在 `body[data-ds-visual-style="whale-song"]` 块中叠加于 modern 基础之上。呈现器只切换该属性；风格切换不触发任何组件重渲染或 JS 重算。
 
+鲸歌音景（`ui-ambience`）是本插件拥有的第二个持久化命名空间：外观区新增一行（播放/暂停 + 音量）控制循环播放的《Travelers' Encore》音频元素（由 `/audio/travelers-encore.mp3` 提供），负责淡入淡出、将 `enabled`／`volume` 持久化到 Host settings 文档，并跟踪浏览器自动播放手势（持久化的 `enabled` 无法在无点击时自动播放；此时该行显示"点击续播"）。
+
 当主机组合包含 HTTP 服务器时，主机侧紧接 `<body>` 起始标签注入同步引导代码。每份 index 响应会嵌入已注册的 Host 设置 `ui-theme.preference` 与 `ui-theme.style`（无 settings provider 时嵌入各自默认值）；浏览器按操作系统配色解析 `system`，随后在外壳加载页面渲染前设置 `color-scheme`、`body[data-ds-dark-theme]` 与 `body[data-ds-visual-style]`。不含 HTTP 服务器的组合不受影响，插件树激活后，ThemeRuntime 与 ui-layout 仍分别是客户端状态和后续 DOM 更新的权威来源。
 
 `src/styles/` 下有六张样式表，全部由 web 壳的 `base.css` 导入：`base.css`、`scales.css`、`design-platform.css`、`scrollbar.css`、`gradient-shadow-text.css` 与 `shiki.css`。`scales.css` 承载两种视觉风格共用的圆角／间距／动效／层级／z-index／品牌渐变／玻璃 token。`scrollbar.css` 是 `--dsw-alias-scrollbar-*` token 的唯一消费方，必须排在声明这些 token 的 `design-platform.css` 之后。

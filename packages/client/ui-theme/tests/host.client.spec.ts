@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import type { WebServer } from '@deepseek-ai/dsh-host-webserver'
 import { SettingsProvider, settingsNamespace, type SettingsNamespace } from '@deepseek-ai/dsh-settings'
 import {
-  DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE, THEME_SETTINGS_NAMESPACE, apply,
+  AMBIENCE_DEFAULT_VOLUME, AMBIENCE_SETTINGS_NAMESPACE, DEFAULT_PREFERENCE, DEFAULT_VISUAL_STYLE,
+  THEME_SETTINGS_NAMESPACE, apply,
 } from '@deepseek-ai/dsh-client-ui-theme'
 
 class MemorySettings extends SettingsProvider {
@@ -15,7 +16,7 @@ class MemorySettings extends SettingsProvider {
 }
 
 describe('ui-theme host', () => {
-  it('registers, validates, and disposes the durable theme namespace with its fiber', async () => {
+  it('registers, validates, and disposes the durable theme and ambience namespaces with their fiber', async () => {
     const ctx = new Context()
     await ctx.plugin(MemorySettings).await()
     const fiber = ctx.plugin({ apply })
@@ -26,8 +27,15 @@ describe('ui-theme host', () => {
     expect(ctx.settings.get(ns)).toEqual({ preference: 'dark', style: DEFAULT_VISUAL_STYLE })
     await expect(ctx.settings.update(ns, { preference: 'sepia' })).rejects.toThrow()
     await expect(ctx.settings.update(ns, { style: 'retro' })).rejects.toThrow()
+    const ambienceNs = settingsNamespace(AMBIENCE_SETTINGS_NAMESPACE)
+    expect(ctx.settings.get(ambienceNs)).toEqual({ enabled: false, volume: AMBIENCE_DEFAULT_VOLUME })
+    await ctx.settings.update(ambienceNs, { enabled: true })
+    expect(ctx.settings.get(ambienceNs)).toEqual({ enabled: true, volume: AMBIENCE_DEFAULT_VOLUME })
+    await expect(ctx.settings.update(ambienceNs, { volume: 2 })).rejects.toThrow()
     await fiber.dispose()
-    expect(ctx.settings.describe().map(row => row.ns)).not.toContain(ns)
+    const remaining = ctx.settings.describe().map(row => row.ns)
+    expect(remaining).not.toContain(ns)
+    expect(remaining).not.toContain(ambienceNs)
   })
 
   it('renders the current durable preference and disposes the index transform', async () => {
