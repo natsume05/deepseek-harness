@@ -141,12 +141,13 @@ export class AmbienceRuntime {
     }
   }
 
-  /** Pause and clear the fade ramp. Only runs after an enable created the
-   * element (toggle/adopt -> tryPlay -> ensureAudio), so it is always live. */
+  /** Pause and clear the fade ramp. A volume-only adopt while disabled can
+   * reach this before any playback created the element, so it is guarded. */
   private stop(): void {
     this.pendingGesture = false
     this.clearFade()
-    const audio = this.audio!
+    const audio = this.audio
+    if (audio === undefined) return
     audio.pause()
     audio.volume = 0
   }

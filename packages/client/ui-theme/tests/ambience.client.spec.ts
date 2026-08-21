@@ -141,6 +141,14 @@ describe('AmbienceRuntime', () => {
     expect(audio.pause).not.toHaveBeenCalled()
   })
 
+  it('a volume-only adopt while disabled stops before any element exists', () => {
+    const { ambience, host, audio } = make()
+    host.publish({ status: 'ready', value: { enabled: false, volume: 0.6 }, revision: 1, writable: true })
+    expect(ambience.getAmbience().volume).toBe(0.6)
+    expect(ambience.getAmbience().enabled).toBe(false)
+    expect(audio.pause).not.toHaveBeenCalled()
+  })
+
   it('a new ramp cancels the previous one and the timer clears', async () => {
     vi.useFakeTimers()
     const { ambience, audio } = make()
