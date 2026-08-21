@@ -1,0 +1,53 @@
+/* Whale-song ambience quick toggle at the sidebar foot. */
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.toggle:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.toggle.on {
+  color: var(--dsw-alias-state-business-primary);
+}
+
+.label {
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+/* Collapsed rail: icon-only round tap target. */
+.rail {
+  width: 32px;
+  padding: 0;
+}
+
+/* Autoplay withheld: a warm attention dot beside the icon. */
+.attention {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-warn-primary);
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--dsw-alias-state-warn-primary) 60%, transparent);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: -2px;
+}

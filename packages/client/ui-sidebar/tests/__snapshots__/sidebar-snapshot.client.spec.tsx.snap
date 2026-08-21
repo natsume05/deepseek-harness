@@ -68,7 +68,23 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
         <div
           data-slot="sidebar.footer.action"
           style="display: contents;"
-        />
+        >
+          <button
+            aria-label="Play whale-song ambience"
+            aria-pressed="false"
+            class="toggle rail"
+            type="button"
+          >
+            <svg
+              data-content="60f7d665"
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="settingsArea"
@@ -161,7 +177,28 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
         <div
           data-slot="sidebar.footer.action"
           style="display: contents;"
-        />
+        >
+          <button
+            aria-label="Play whale-song ambience"
+            aria-pressed="false"
+            class="toggle"
+            type="button"
+          >
+            <svg
+              data-content="60f7d665"
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            />
+            <span
+              class="label"
+            >
+              Whale-song ambience
+            </span>
+          </button>
+        </div>
       </div>
       <div
         class="settingsArea"
@@ -254,7 +291,28 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
         <div
           data-slot="sidebar.footer.action"
           style="display: contents;"
-        />
+        >
+          <button
+            aria-label="播放鲸歌音景"
+            aria-pressed="false"
+            class="toggle"
+            type="button"
+          >
+            <svg
+              data-content="60f7d665"
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            />
+            <span
+              class="label"
+            >
+              鲸歌音景
+            </span>
+          </button>
+        </div>
       </div>
       <div
         class="settingsArea"

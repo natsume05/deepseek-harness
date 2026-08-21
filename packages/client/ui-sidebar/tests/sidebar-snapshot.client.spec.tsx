@@ -29,6 +29,10 @@ afterEach(cleanup)
 async function bench(options: { locale?: 'en' } = {}) {
   const runtime = await SlotTestRuntime.create()
   runtime.provide('layout', { toggleSidebar: vi.fn() })
+  runtime.provide('ambience', {
+    getAmbience: vi.fn(() => ({ enabled: false, volume: 0.4, pendingGesture: false, revision: 0 })),
+    toggle: vi.fn(() => Promise.resolve()),
+  })
   const locale = new LocaleRuntime(runtime.ctx)
   if (options.locale === 'en') locale.setLocale('en')
   runtime.provide('locale', locale)

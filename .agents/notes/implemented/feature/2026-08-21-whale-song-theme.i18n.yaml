@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-21-whale-song-theme.md
+2026-08-21-whale-song-theme.md: 718e4bb405abe4be37a4c07f809a8995d23eb62e
+2026-08-21-whale-song-theme.zh.md: 2a22b3d8bc70ad63dc406807b3cab69d221e66af

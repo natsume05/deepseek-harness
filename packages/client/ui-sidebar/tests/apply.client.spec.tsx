@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
 import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
 import { apply, inject } from '@deepseek-ai/dsh-client-ui-sidebar/client'
-import type { SidebarRootInjected } from '@deepseek-ai/dsh-client-ui-sidebar/client'
+import type { AmbienceToggleInjected, SidebarRootInjected } from '@deepseek-ai/dsh-client-ui-sidebar/client'
+import { AmbienceToggle } from '../src/client/AmbienceToggle.tsx'
+import { createAmbienceToggleStore } from '../src/client/ambience-toggle-store.ts'
 
 async function bench(declare = true) {
   const ctx = new Context()
@@ -16,6 +18,11 @@ async function bench(declare = true) {
   ctx.provide('sessions', sessions as never)
   ctx.provide('workspaces', workspaces as never)
   ctx.provide('locale', new LocaleRuntime(ctx))
+  const ambience = {
+    getAmbience: vi.fn(() => ({ enabled: false, volume: 0.4, pendingGesture: false, revision: 0 })),
+    toggle: vi.fn(() => Promise.resolve()),
+  }
+  ctx.provide('ambience', ambience as never)
   const slots = ctx.get('slots') as SlotRegistry
   if (declare) {
     slots.register(
@@ -23,12 +30,12 @@ async function bench(declare = true) {
       () => null,
     )
   }
-  return { ctx, slots, layout, workspaces, sessions }
+  return { ctx, slots, layout, workspaces, sessions, ambience }
 }
 
 describe('ui-sidebar apply', () => {
   it('declares only the services it uses', () => {
-    expect(inject).toEqual(['slots', 'layout', 'sessions', 'workspaces', 'locale'])
+    expect(inject).toEqual(['slots', 'layout', 'sessions', 'workspaces', 'locale', 'ambience'])
   })
 
   it('registers the shell and declares its child seats', async () => {
@@ -54,6 +61,19 @@ describe('ui-sidebar apply', () => {
   it('fails when no live owner declared the sidebar slot', async () => {
     const b = await bench(false)
     await expect(b.ctx.plugin({ inject: [...inject], apply })).rejects.toThrow(/not declared/)
+  })
+
+  it('registers the whale-song ambience quick toggle into the footer action slot', async () => {
+    const b = await bench()
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+    const entry = b.slots.entries('sidebar.footer.action').find(e => e.component === AmbienceToggle)!
+    expect(entry.options).toMatchObject({ id: 'ambience-toggle', order: 10 })
+    expect(entry.locale).toBe('sidebar')
+    const handle = entry.store as ReturnType<typeof createAmbienceToggleStore>
+    const instance = handle.create()
+    const face = (entry.inject as unknown as (a: typeof instance.actions) => AmbienceToggleInjected)(instance.actions)
+    face.toggle()
+    expect(b.ambience.toggle).toHaveBeenCalledOnce()
   })
 
   it('removes the entry and child declaration on teardown', async () => {
