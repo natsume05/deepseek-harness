@@ -37,6 +37,9 @@ export function StateDot({ state, size = 10, className }: {
         shapeRendering="crispEdges"
         aria-hidden="true"
       >
+        {/* Whale-song thinking signal: a sonar ring expands from the chase
+            dot (stroke rides currentColor; hidden outside whale-song). */}
+        <circle className={css.sonar} cx="5" cy="5" r="4.5" fill="none" />
         {MATRIX_CELLS.map(([x, y], index) => (
           <rect
             key={`${x}-${y}`}

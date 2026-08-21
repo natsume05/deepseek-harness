@@ -7,7 +7,7 @@
 import { useId } from 'react'
 import type { ReactNode, RefObject } from 'react'
 import {
-  FishLogo, IconChevronDownOutline14, IconFolderClose16, IconFolderOpen16,
+  FishLogo, IconChevronDownOutline14, IconFolderClose16, IconFolderOpen16, NomaiRing,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { workspaceTitleOf } from '@deepseek-ai/dsh-client-runtime/client'
 import type { ConversationSlotProps } from '../contract/slots.ts'
@@ -141,6 +141,9 @@ export function HeroShell({ t, children }: HeroShellProps) {
           <span className={css.headlineText} data-hero-headline="whale-song">{t('hero.headlineWhaleSong')}</span>
           <span className={css.previewBadge}>{t('hero.preview')}</span>
         </div>
+        {/* Whale-song sigil: a Nomai ring glyph divider under the headline
+            (decorative, aria-hidden; hidden outside the whale-song track). */}
+        <NomaiRing size={20} className={css.sigil} />
         <div className={css.body}>
           {/* The resident composer (ConversationRoot's root-owned scrollport;
               the workspace row rides the stack above the card) is CSS-centered

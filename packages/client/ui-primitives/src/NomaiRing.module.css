@@ -1,0 +1,16 @@
+/* Nomai ring: thin stroke riding currentColor; consumers tint via color. */
+.ring {
+  flex: none;
+  display: inline-block;
+}
+
+.circle {
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.tick {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+}

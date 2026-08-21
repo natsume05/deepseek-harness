@@ -379,3 +379,16 @@
     transition: transform 1.6s ease;
   }
 }
+
+/* Whale-song sigil: a Nomai ring glyph divider under the headline. Hidden
+   outside the whale-song track so the shared hero stack keeps its geometry. */
+.sigil {
+  display: none;
+  margin: 0 auto;
+  color: var(--dsw-static-leviathan-cyan);
+  opacity: 0.55;
+}
+
+:global(body[data-ds-visual-style="whale-song"]) .sigil {
+  display: block;
+}

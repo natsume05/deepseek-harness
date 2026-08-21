@@ -62,6 +62,39 @@
 .matrix {
   flex: none;
   color: var(--dsh-state-ongoing);
+  /* The whale-song sonar pulse expands beyond the 10px viewBox. */
+  overflow: visible;
+}
+
+/* Whale-song thinking signal: a sonar ring expanding from the chase dot.
+   Hidden outside the whale-song track; the animation drives opacity. */
+.sonar {
+  stroke: currentColor;
+  stroke-width: 1;
+  fill: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+@keyframes dsh-state-sonar {
+  0% { transform: scale(0.5); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(body[data-ds-visual-style="whale-song"]) .sonar {
+    opacity: 1;
+    animation: dsh-state-sonar 2.4s ease-out infinite;
+  }
+}
+
+/* Whale-song planet dots: the solid states read as small ringed planets
+   instead of a filled halo. */
+:global(body[data-ds-visual-style="whale-song"]) .dot::before {
+  background: transparent;
+  border: 1px solid currentColor;
+  opacity: 0.4;
 }
 
 .cell {
@@ -89,5 +122,10 @@
   .cell {
     animation: none;
     opacity: 0.6;
+  }
+
+  .sonar {
+    animation: none;
+    opacity: 0;
   }
 }
